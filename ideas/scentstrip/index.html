@@ -1,0 +1,2289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScentStrip — Wear Your Scent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── RESET ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --ivory:    #FAF6F0;
+  --blush:    #F0E4D4;
+  --amber:    #C8882A;
+  --amber-lt: #F5DEB3;
+  --amber-dk: #8B5E10;
+  --ink:      #1C1410;
+  --charcoal: #3D2E22;
+  --stone:    #8A7A6E;
+  --border:   #E8DDD2;
+  --white:    #FFFFFF;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+::selection { background: var(--amber-lt); color: var(--ink); }
+
+/* ── NAV ─────────────────────────────────────────────────────────────── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:300;
+  padding: 1.25rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background .4s, border-color .4s;
+}
+nav.scrolled {
+  background: rgba(250,246,240,0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-brand {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -.01em;
+}
+.nav-brand span { color: var(--amber); }
+.nav-right { display:flex; align-items:center; gap:2.5rem; }
+.nav-link {
+  font-size: .82rem; font-weight: 500; letter-spacing:.05em;
+  text-transform: uppercase; color: var(--charcoal);
+  text-decoration: none; cursor: pointer;
+  transition: color .2s;
+}
+.nav-link:hover { color: var(--amber); }
+.nav-cta {
+  background: var(--ink); color: var(--ivory);
+  font-size: .8rem; font-weight: 600; letter-spacing:.05em;
+  text-transform: uppercase; padding: .65rem 1.5rem;
+  border: none; cursor: pointer;
+  transition: background .2s, transform .15s;
+  font-family: 'DM Sans', sans-serif;
+}
+.nav-cta:hover { background: var(--amber); transform: translateY(-1px); }
+
+/* ── HERO ────────────────────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 8rem 3rem 4rem;
+  gap: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg-grain {
+  position: absolute; inset:0; opacity:.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem; letter-spacing:.2em; text-transform:uppercase;
+  color: var(--amber); margin-bottom: 1.5rem;
+  display: flex; align-items:center; gap:.75rem;
+}
+.hero-eyebrow::before {
+  content:''; width:28px; height:1px; background:var(--amber);
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 5.5vw, 5.2rem);
+  line-height: .97;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: 1.75rem;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--amber);
+}
+.hero-sub {
+  font-size: 1.08rem; font-weight: 300;
+  color: var(--charcoal); line-height: 1.8;
+  max-width: 480px; margin-bottom: 2.5rem;
+}
+.hero-actions { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
+.btn-primary {
+  background: var(--ink); color: var(--ivory);
+  font-family:'DM Sans',sans-serif; font-weight:600;
+  font-size:.88rem; letter-spacing:.04em; text-transform:uppercase;
+  padding:.9rem 2.2rem; border:none; cursor:pointer;
+  transition: background .2s, transform .15s;
+}
+.btn-primary:hover { background:var(--amber); transform:translateY(-2px); }
+.btn-ghost {
+  background:transparent; color:var(--ink);
+  font-family:'DM Sans',sans-serif; font-weight:500;
+  font-size:.88rem; letter-spacing:.04em;
+  padding:.9rem 1.5rem; border:1.5px solid var(--border);
+  cursor:pointer; transition:border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color:var(--amber); color:var(--amber); }
+
+/* Hero strip visual */
+/* ── HERO VISUAL — realistic strip ───────────────────────────────────── */
+.hero-visual {
+  position: relative;
+  display:flex; align-items:center; justify-content:center;
+  height: 560px;
+}
+/* Ambient glow behind strip */
+.hero-visual::before {
+  content:'';
+  position:absolute;
+  width:340px; height:340px;
+  border-radius:50%;
+  background: radial-gradient(ellipse, rgba(200,136,42,.13) 0%, transparent 70%);
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.strip-scene {
+  position: relative;
+  width: 300px;
+  height: 480px;
+}
+
+/* Shadow cast on surface below */
+.strip-shadow {
+  position:absolute;
+  width:180px; height:24px;
+  background: radial-gradient(ellipse, rgba(139,94,16,.35) 0%, transparent 70%);
+  bottom:30px; left:40px;
+  border-radius:50%;
+  animation: shadowPulse 4s ease-in-out infinite;
+}
+@keyframes shadowPulse {
+  0%,100%{ transform:scaleX(1); opacity:.6; }
+  50%    { transform:scaleX(.82); opacity:.3; }
+}
+
+/* Backing paper (the peel-off liner) slightly offset behind */
+.strip-backing-paper {
+  position:absolute;
+  width:190px; height:78px;
+  left:55px; bottom:62px;
+  background: linear-gradient(180deg, #f8f4ee 0%, #ede8e0 100%);
+  border-radius:0 0 10px 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.10);
+  z-index:1;
+}
+/* Printed lines on backing paper */
+.strip-backing-paper::before {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 10px,
+    rgba(180,160,130,.12) 10px,
+    rgba(180,160,130,.12) 11px
+  );
+  border-radius:0 0 10px 10px;
+}
+.strip-backing-paper::after {
+  content:'PEEL HERE';
+  position:absolute;
+  bottom:10px; left:50%;
+  transform:translateX(-50%);
+  font-family:'DM Mono',monospace;
+  font-size:.48rem; letter-spacing:.22em;
+  color:rgba(120,90,50,.5); text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* THE MAIN STRIP BODY */
+.strip-body {
+  position: absolute;
+  width: 190px; height: 310px;
+  left: 55px; top: 60px;
+  border-radius: 14px;
+  z-index: 3;
+  animation: stripFloat 4s ease-in-out infinite;
+  cursor: pointer;
+  /* Layered gradients simulate gloss and depth */
+  background:
+    /* specular gloss highlight top-left */
+    linear-gradient(135deg,
+      rgba(255,255,255,.38) 0%,
+      rgba(255,255,255,.08) 28%,
+      transparent 50%
+    ),
+    /* edge darkening right/bottom */
+    linear-gradient(315deg,
+      rgba(100,60,0,.22) 0%,
+      transparent 50%
+    ),
+    /* base amber warm colour */
+    linear-gradient(160deg,
+      #F0D090 0%,
+      #D4A040 30%,
+      #C8882A 60%,
+      #A06018 100%
+    );
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.5) inset,   /* top bright edge */
+    -1px 0 0 rgba(255,255,255,.2) inset,  /* left bright edge */
+    0 -1px 0 rgba(80,40,0,.3) inset,      /* bottom dark edge */
+    1px 0 0 rgba(80,40,0,.2) inset,       /* right dark edge */
+    0 28px 56px rgba(139,94,16,.30),       /* main drop shadow */
+    0 8px 20px rgba(0,0,0,.10);
+}
+@keyframes stripFloat {
+  0%,100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-14px) rotate(-1.5deg); }
+}
+
+/* Embossed horizontal lines texture */
+.strip-texture {
+  position:absolute; inset:0;
+  border-radius:14px;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 6px,
+    rgba(255,255,255,.05) 6px,
+    rgba(255,255,255,.05) 7px
+  );
+  pointer-events:none;
+}
+
+/* Top foil band */
+.strip-foil-top {
+  position:absolute;
+  top:0; left:0; right:0; height:44px;
+  border-radius:14px 14px 0 0;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,.22) 0%,
+    rgba(255,255,255,.06) 100%
+  );
+  border-bottom:1px solid rgba(255,255,255,.18);
+}
+/* Dot matrix brand mark in foil */
+.strip-foil-top::after {
+  content:'✦ SCENTSTRIP ✦';
+  position:absolute;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  font-family:'DM Mono',monospace;
+  font-size:.42rem; letter-spacing:.22em;
+  color:rgba(255,255,255,.65); text-transform:uppercase;
+  white-space:nowrap;
+}
+
+/* Central branding */
+.strip-logo {
+  position: absolute;
+  top:50%; left:50%;
+  transform: translate(-50%, -50%) translateY(-10px);
+  text-align: center;
+  pointer-events: none;
+  width:160px;
+}
+/* Embossed oval behind logo */
+.strip-logo::before {
+  content:'';
+  position:absolute;
+  width:140px; height:80px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:50%;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+}
+.strip-logo-text {
+  font-family:'Playfair Display',serif;
+  font-style:italic; font-weight:900;
+  font-size:1.55rem; color:rgba(255,255,255,.96);
+  letter-spacing:-.02em; line-height:1;
+  text-shadow: 0 1px 3px rgba(80,40,0,.4), 0 -1px 0 rgba(255,255,255,.15);
+}
+.strip-logo-scent {
+  font-family:'DM Mono',monospace;
+  font-size:.5rem; letter-spacing:.25em;
+  color:rgba(255,255,255,.55); text-transform:uppercase;
+  margin-top:.5rem; display:block;
+}
+.strip-logo-name {
+  font-family:'Playfair Display',serif;
+  font-style:italic; font-weight:400;
+  font-size:.85rem; color:rgba(255,255,255,.8);
+  margin-top:.2rem; display:block;
+  letter-spacing:.02em;
+}
+
+/* Bottom info strip */
+.strip-bottom-info {
+  position:absolute;
+  bottom:0; left:0; right:0; height:50px;
+  border-radius:0 0 14px 14px;
+  border-top:1px solid rgba(255,255,255,.12);
+  background: linear-gradient(0deg,
+    rgba(80,40,0,.25) 0%,
+    rgba(80,40,0,.05) 100%
+  );
+  display:flex; align-items:center; justify-content:center;
+  gap:12px;
+}
+.strip-info-pill {
+  font-family:'DM Mono',monospace;
+  font-size:.4rem; letter-spacing:.15em;
+  color:rgba(255,255,255,.55); text-transform:uppercase;
+  background:rgba(0,0,0,.15);
+  padding:.2rem .55rem; border-radius:20px;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+/* ── CANVAS PEEL ─────────────────────────────────────────────────────── */
+#peel-canvas {
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  border-radius:14px;
+  z-index:20;
+  cursor:grab;
+  touch-action:none;
+  pointer-events:auto;
+}
+#peel-canvas.done   { pointer-events:none; }
+#peel-canvas.grabbing { cursor:grabbing; }
+
+/* Hint label */
+.peel-hint {
+  position:absolute;
+  bottom:-2.4rem; left:50%;
+  transform:translateX(-50%);
+  font-family:'DM Mono',monospace;
+  font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--stone); white-space:nowrap; z-index:30;
+  transition:opacity .4s;
+}
+.peel-hint.hide { opacity:0; pointer-events:none; }
+
+/* Reset button */
+.peel-reset {
+  position:absolute;
+  bottom:-2.4rem; left:50%;
+  transform:translateX(-50%);
+  font-family:'DM Mono',monospace; font-size:.62rem;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--amber-dk); cursor:pointer;
+  border:1px solid rgba(200,136,42,.35); border-radius:20px;
+  padding:.32rem .9rem; background:rgba(245,222,179,.28);
+  white-space:nowrap; z-index:30;
+  opacity:0; pointer-events:none;
+  transition:all .3s;
+}
+.peel-reset.show { opacity:1; pointer-events:auto; }
+.peel-reset:hover { background:rgba(245,222,179,.6); border-color:var(--amber); }
+
+/* ── FLOATING TRASH BALL (full page) ─────────────────────────────────── */
+#page-ball {
+  position: fixed;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  /* ball painted via inline background in JS */
+}
+
+/* ── FIXED VIEWPORT DUSTBIN (bottom-right corner) ────────────────────── */
+#page-bin {
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+  width: 64px;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.3) translateY(20px);
+  transition: opacity .4s cubic-bezier(.34,1.56,.64,1),
+              transform .45s cubic-bezier(.34,1.56,.64,1);
+}
+#page-bin.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+#page-bin .dustbin-wrap { position: relative; height: 60px; }
+#page-bin .dustbin-handle {
+  position: absolute; top: -7px; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 9px;
+  border: 3.5px solid #bdb19d; border-bottom: none;
+  border-radius: 7px 7px 0 0;
+}
+#page-bin .dustbin-lid {
+  position: absolute; top: 0; left: -2px; right: -2px; height: 11px;
+  background: linear-gradient(180deg, #ece4d4, #bdb19d);
+  border-radius: 4px;
+  transform-origin: 15% 100%;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 2px 5px rgba(0,0,0,.15);
+}
+#page-bin .dustbin-body {
+  position: absolute; bottom: 0; left: 7px; right: 7px; height: 46px;
+  background: linear-gradient(180deg, #d6cdbe, #a89c8a);
+  border-radius: 5px 5px 14px 14px;
+  box-shadow: inset 0 -7px 12px rgba(0,0,0,.15), 0 5px 10px rgba(0,0,0,.15);
+  overflow: hidden;
+}
+#page-bin .dustbin-body::before,
+#page-bin .dustbin-body::after {
+  content: ''; position: absolute; top: 9px; bottom: 9px; width: 2px;
+  background: rgba(0,0,0,.12);
+}
+#page-bin .dustbin-body::before { left: 32%; }
+#page-bin .dustbin-body::after  { left: 64%; }
+#page-bin.catch .dustbin-lid { transform: rotate(-68deg) translate(2px,-2px); }
+#page-bin.catch .dustbin-body { animation: binBounce .32s ease; }
+@keyframes binBounce {
+  0%,100%{ transform:translateY(0) scaleY(1); }
+  40%    { transform:translateY(3px) scaleY(.94); }
+}
+
+/* Scent wave curls rising from top */
+.scent-waves {
+  position:absolute;
+  top:52px; left:50%;
+  transform:translateX(-50%);
+  display:flex; gap:10px; z-index:6;
+}
+.wave-line {
+  width:2px; border-radius:2px;
+  opacity:.45;
+  animation:waveRise 2.8s ease-in-out infinite;
+}
+.wave-line:nth-child(1){height:28px;background:linear-gradient(to top,var(--amber),transparent);animation-delay:0s;}
+.wave-line:nth-child(2){height:46px;background:linear-gradient(to top,#C8882A,transparent);animation-delay:.35s;}
+.wave-line:nth-child(3){height:36px;background:linear-gradient(to top,var(--amber),transparent);animation-delay:.7s;}
+.wave-line:nth-child(4){height:52px;background:linear-gradient(to top,#D4A040,transparent);animation-delay:.2s;}
+.wave-line:nth-child(5){height:30px;background:linear-gradient(to top,var(--amber),transparent);animation-delay:.55s;}
+@keyframes waveRise {
+  0%,100%{transform:scaleY(1) translateY(0);opacity:.35;}
+  50%    {transform:scaleY(1.45) translateY(-4px);opacity:.75;}
+}
+
+/* Floating scent word tags */
+.scent-note-float {
+  position:absolute;
+  font-family:'DM Mono',monospace;
+  font-size:.6rem; letter-spacing:.12em;
+  color:var(--amber-dk); text-transform:uppercase;
+  white-space:nowrap; opacity:0;
+  background:rgba(245,222,179,.35);
+  border:1px solid rgba(200,136,42,.25);
+  padding:.22rem .7rem; border-radius:20px;
+  backdrop-filter:blur(4px);
+  animation:noteFloat 7s ease-in-out infinite;
+}
+@keyframes noteFloat {
+  0%  { opacity:0; transform:translateY(6px); }
+  15% { opacity:.85; }
+  85% { opacity:.85; }
+  100%{ opacity:0; transform:translateY(-8px); }
+}
+
+/* Hero scroll indicator */
+.hero-scroll {
+  position:absolute; bottom:2rem; left:50%;
+  transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  opacity:.5; animation:bob 2s ease-in-out infinite;
+}
+.hero-scroll span {
+  font-family:'DM Mono',monospace;
+  font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--stone);
+}
+.hero-scroll-line {
+  width:1px; height:32px;
+  background:linear-gradient(to bottom,transparent,var(--stone));
+}
+@keyframes bob {
+  0%,100%{transform:translateX(-50%) translateY(0)}
+  50%{transform:translateX(-50%) translateY(7px)}
+}
+
+/* ── PROBLEM SECTION ─────────────────────────────────────────────────── */
+#problem {
+  background: var(--ink);
+  padding: 7rem 3rem;
+  overflow: hidden;
+  position: relative;
+}
+.problem-inner {
+  max-width: 1160px; margin:0 auto;
+  display:grid; grid-template-columns:1fr 1fr; gap:6rem; align-items:center;
+}
+.problem-tag {
+  font-family:'DM Mono',monospace;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:1.25rem;
+}
+.problem-title {
+  font-family:'Playfair Display',serif;
+  font-weight:900; font-size:clamp(2rem,4vw,3.4rem);
+  line-height:1.02;letter-spacing:-.025em;
+  color:var(--ivory);margin-bottom:1.5rem;
+}
+.problem-title em { font-style:italic; color:var(--amber); }
+.problem-body {
+  font-size:1rem;color:rgba(250,246,240,.65);
+  line-height:1.85;font-weight:300;
+}
+.problem-body p { margin-bottom:1rem; }
+.problem-body strong { color:var(--ivory); font-weight:500; }
+
+.pain-cards {
+  display:flex;flex-direction:column;gap:1.25rem;
+}
+.pain-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:1.5rem;
+  transition:border-color .25s, background .25s;
+}
+.pain-card:hover {
+  border-color:rgba(200,136,42,.35);
+  background:rgba(200,136,42,.05);
+}
+.pain-icon { font-size:1.4rem; margin-bottom:.75rem; }
+.pain-title {
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:1rem;
+  color:var(--ivory);margin-bottom:.4rem;
+}
+.pain-desc {
+  font-size:.85rem;color:rgba(250,246,240,.5);line-height:1.65;
+}
+
+/* ── SCIENCE SECTION ─────────────────────────────────────────────────── */
+#science {
+  background: var(--blush);
+  padding: 8rem 3rem;
+}
+.science-inner {
+  max-width:1160px;margin:0 auto;
+}
+.science-header { text-align:center; margin-bottom:5rem; }
+.science-eyebrow {
+  font-family:'DM Mono',monospace;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:1rem;
+}
+.science-title {
+  font-family:'Playfair Display',serif;
+  font-weight:900;font-size:clamp(2rem,4vw,3.4rem);
+  line-height:1.02;letter-spacing:-.025em;color:var(--ink);
+}
+.science-title em { font-style:italic;color:var(--amber); }
+
+/* Scent pyramid — interactive */
+.pyramid-wrap {
+  display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:center;
+  margin-bottom:5rem;
+}
+.pyramid-svg-wrap { position:relative; }
+.pyramid-svg { width:100%; max-width:360px; display:block; margin:0 auto; }
+.pyramid-layer {
+  cursor:pointer;
+  transition:opacity .2s;
+}
+.pyramid-layer:hover { opacity:.85; }
+.pyramid-layer.active rect, .pyramid-layer.active polygon { opacity:1; }
+
+.pyramid-info { position:relative; }
+.note-display {
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:2.25rem;
+  min-height:220px;
+  transition:all .35s;
+}
+.note-display-tag {
+  font-family:'DM Mono',monospace;
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:.75rem;
+}
+.note-display-title {
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:1.5rem;color:var(--ink);
+  margin-bottom:.5rem;
+}
+.note-display-body {
+  font-size:.92rem;color:var(--charcoal);line-height:1.75;font-weight:300;
+  margin-bottom:1.25rem;
+}
+.note-examples {
+  display:flex;flex-wrap:wrap;gap:.5rem;
+}
+.note-chip {
+  background:var(--blush);color:var(--charcoal);
+  font-size:.75rem;font-weight:500;
+  padding:.3rem .8rem;border-radius:20px;border:1px solid var(--border);
+}
+
+/* Layers grid */
+.layers-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;
+}
+.layer-card {
+  background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:1.75rem;
+  border-top:3px solid transparent;
+  transition:transform .25s,box-shadow .25s;
+}
+.layer-card:hover { transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.07); }
+.layer-card.top    { border-top-color:#C8A882; }
+.layer-card.middle { border-top-color:#C88828; }
+.layer-card.base   { border-top-color:#8B5E10; }
+.layer-card-label {
+  font-family:'DM Mono',monospace;
+  font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:.5rem;
+}
+.layer-card-title {
+  font-family:'Playfair Display',serif;
+  font-weight:700;font-size:1.05rem;color:var(--ink);margin-bottom:.4rem;
+}
+.layer-card-desc { font-size:.83rem;color:var(--charcoal);line-height:1.65; }
+
+/* ── PRODUCT SECTION ─────────────────────────────────────────────────── */
+#product {
+  background:var(--ivory);padding:8rem 3rem;
+}
+.product-inner { max-width:1160px;margin:0 auto; }
+.product-header { margin-bottom:4rem; }
+.product-grid {
+  display:grid;grid-template-columns:1.1fr 1fr;gap:5rem;align-items:center;
+}
+.product-specs {
+  display:flex;flex-direction:column;gap:1.5rem;margin-top:2.5rem;
+}
+.spec-row {
+  display:flex;align-items:flex-start;gap:1.25rem;
+  padding-bottom:1.5rem;border-bottom:1px solid var(--border);
+}
+.spec-row:last-child { border-bottom:none;padding-bottom:0; }
+.spec-icon {
+  width:42px;height:42px;border-radius:10px;
+  background:var(--blush);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;
+}
+.spec-label {
+  font-family:'DM Mono',monospace;
+  font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--stone);margin-bottom:.2rem;
+}
+.spec-val {
+  font-weight:500;font-size:.92rem;color:var(--ink);line-height:1.5;
+}
+
+/* Strip showcase visual — realistic multi-view */
+.showcase-visual {
+  position:relative; min-height:520px;
+  display:flex; flex-direction:column; gap:2rem; align-items:center;
+  padding:2rem 0;
+}
+
+/* ── Top view: three strips fanned out ── */
+.strips-fan {
+  position:relative;
+  width:280px; height:200px;
+  margin:0 auto;
+}
+.fan-strip {
+  position:absolute;
+  width:220px; height:72px;
+  border-radius:10px;
+  left:50%; top:50%;
+  transform-origin:center center;
+  box-shadow: 0 8px 28px rgba(139,94,16,.2), 0 2px 8px rgba(0,0,0,.08);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 1.2rem;
+  overflow:hidden;
+}
+/* Gloss layer on each fan strip */
+.fan-strip::before {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(135deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,.05) 40%,transparent 60%);
+  border-radius:10px;
+}
+/* Emboss lines */
+.fan-strip::after {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 5px,
+    rgba(255,255,255,.04) 5px, rgba(255,255,255,.04) 6px
+  );
+  border-radius:10px;
+}
+.fan-strip-label {
+  position:relative; z-index:2;
+  font-family:'Playfair Display',serif;
+  font-style:italic; font-weight:700;
+  font-size:.95rem; color:rgba(255,255,255,.92);
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+.fan-strip-info {
+  position:relative; z-index:2;
+  text-align:right;
+}
+.fan-strip-size {
+  font-family:'DM Mono',monospace;
+  font-size:.48rem; letter-spacing:.15em;
+  color:rgba(255,255,255,.55); text-transform:uppercase;
+  display:block;
+}
+.fan-strip-duration {
+  font-family:'DM Mono',monospace;
+  font-size:.58rem; letter-spacing:.1em;
+  color:rgba(255,255,255,.8); text-transform:uppercase;
+  display:block; margin-top:.1rem;
+}
+/* Three fan positions */
+.fan-s1 {
+  background: linear-gradient(130deg,#F0D090,#C8882A,#A06018);
+  transform:translate(-50%,-50%) rotate(-18deg) translateY(10px);
+}
+.fan-s2 {
+  background: linear-gradient(130deg,#D4B060,#B06820,#8B4C10);
+  transform:translate(-50%,-50%) rotate(0deg);
+  box-shadow: 0 12px 36px rgba(139,94,16,.28), 0 3px 10px rgba(0,0,0,.12);
+}
+.fan-s3 {
+  background: linear-gradient(130deg,#C8A870,#906020,#6B3E0C);
+  transform:translate(-50%,-50%) rotate(18deg) translateY(10px);
+}
+
+/* ── Cross-section diagram ── */
+.cross-section {
+  width:100%;
+  background:var(--white); border:1px solid var(--border);
+  border-radius:16px; padding:1.5rem;
+}
+.cross-label {
+  font-family:'DM Mono',monospace;
+  font-size:.6rem; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--stone); margin-bottom:1.1rem; display:block;
+}
+.cross-layers {
+  display:flex; flex-direction:column; gap:3px;
+  border-radius:10px; overflow:hidden;
+  border:1px solid var(--border);
+}
+.cross-layer {
+  display:flex; align-items:center; gap:1rem;
+  padding:.65rem 1rem; position:relative;
+  transition:all .2s;
+}
+.cross-layer:hover { filter:brightness(.96); }
+.cross-layer-swatch {
+  width:10px; height:10px; border-radius:2px; flex-shrink:0;
+}
+.cross-layer-name {
+  font-family:'DM Mono',monospace;
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--charcoal); flex:1; font-weight:500;
+}
+.cross-layer-desc {
+  font-size:.75rem; color:var(--stone); text-align:right;
+  line-height:1.4;
+}
+/* Layer colours */
+.cl-gloss  { background:rgba(255,255,255,.8); border-bottom:1px solid rgba(220,200,160,.3); }
+.cl-top    { background:rgba(240,208,144,.55); }
+.cl-mid    { background:rgba(200,136,42,.35); }
+.cl-base   { background:rgba(139,94,16,.25); }
+.cl-glyc   { background:rgba(220,200,160,.4); }
+.cl-adhesive { background:rgba(240,234,220,.6); border:1px dashed rgba(180,160,120,.4); }
+.cl-liner  { background:rgba(248,244,238,.8); }
+
+/* ── Packaging sleeve ── */
+.packaging-sleeve {
+  width:100%;
+  background: linear-gradient(135deg,#1C1410 0%,#3D2E22 100%);
+  border-radius:16px; padding:1.75rem;
+  display:flex; align-items:center; gap:1.5rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,.2);
+  position:relative; overflow:hidden;
+}
+.packaging-sleeve::before {
+  content:'';
+  position:absolute; inset:0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 8px,
+    rgba(255,255,255,.015) 8px, rgba(255,255,255,.015) 9px
+  );
+}
+.sleeve-strip-preview {
+  width:52px; height:82px; border-radius:8px; flex-shrink:0;
+  background: linear-gradient(160deg,#F0D090,#C8882A,#A06018);
+  box-shadow: 0 4px 16px rgba(139,94,16,.4);
+  position:relative; z-index:1;
+}
+.sleeve-strip-preview::after {
+  content:'';
+  position:absolute; inset:0; border-radius:8px;
+  background:linear-gradient(135deg,rgba(255,255,255,.25) 0%,transparent 50%);
+}
+.sleeve-text { position:relative; z-index:1; }
+.sleeve-brand {
+  font-family:'Playfair Display',serif;
+  font-style:italic; font-weight:900;
+  font-size:1.25rem; color:rgba(250,246,240,.92);
+  letter-spacing:-.01em; line-height:1;
+}
+.sleeve-scent {
+  font-family:'DM Mono',monospace;
+  font-size:.52rem; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--amber); margin-top:.35rem; display:block;
+}
+.sleeve-count {
+  font-family:'DM Mono',monospace;
+  font-size:.52rem; letter-spacing:.15em; text-transform:uppercase;
+  color:rgba(250,246,240,.4); margin-top:.5rem; display:block;
+}
+.sleeve-badges {
+  margin-left:auto; display:flex; flex-direction:column;
+  gap:.4rem; align-items:flex-end; position:relative; z-index:1;
+}
+.sleeve-badge {
+  font-family:'DM Mono',monospace;
+  font-size:.48rem; letter-spacing:.15em; text-transform:uppercase;
+  color:rgba(250,246,240,.55);
+  border:1px solid rgba(255,255,255,.1);
+  padding:.2rem .6rem; border-radius:20px;
+  white-space:nowrap;
+}
+
+/* ── HOW IT WORKS ────────────────────────────────────────────────────── */
+#how {
+  background:var(--ink);padding:8rem 3rem;
+}
+.how-inner { max-width:1160px;margin:0 auto; }
+.how-tag {
+  font-family:'DM Mono',monospace;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:1.25rem;
+}
+.how-title {
+  font-family:'Playfair Display',serif;
+  font-weight:900;font-size:clamp(2rem,4vw,3.4rem);
+  line-height:1.02;letter-spacing:-.025em;
+  color:var(--ivory);margin-bottom:3.5rem;
+}
+.how-title em { font-style:italic;color:var(--amber); }
+.steps-row {
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:2rem;position:relative;
+}
+.steps-row::before {
+  content:'';
+  position:absolute;top:28px;left:10%;right:10%;
+  height:1px;background:rgba(255,255,255,.08);
+  z-index:0;
+}
+.step {
+  position:relative;z-index:1;text-align:center;
+}
+.step-num {
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(200,136,42,.15);border:1px solid rgba(200,136,42,.3);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 1.25rem;
+  font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;
+  color:var(--amber);transition:background .25s,border-color .25s;
+}
+.step:hover .step-num {
+  background:rgba(200,136,42,.3);border-color:var(--amber);
+}
+.step-title {
+  font-family:'Playfair Display',serif;font-weight:700;font-size:1rem;
+  color:var(--ivory);margin-bottom:.5rem;
+}
+.step-desc { font-size:.83rem;color:rgba(250,246,240,.5);line-height:1.65; }
+
+/* ── FEEDBACK / INTEREST ─────────────────────────────────────────────── */
+#interest {
+  background:var(--blush);padding:8rem 3rem;
+}
+.interest-inner {
+  max-width:760px;margin:0 auto;text-align:center;
+}
+.interest-eyebrow {
+  font-family:'DM Mono',monospace;
+  font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:1.25rem;
+}
+.interest-title {
+  font-family:'Playfair Display',serif;
+  font-weight:900;font-size:clamp(2rem,4vw,3.2rem);
+  line-height:1.02;letter-spacing:-.025em;color:var(--ink);
+  margin-bottom:1rem;
+}
+.interest-title em { font-style:italic;color:var(--amber); }
+.interest-sub {
+  font-size:1rem;color:var(--charcoal);line-height:1.8;
+  font-weight:300;margin-bottom:3rem;
+}
+
+/* Reactions */
+.reactions {
+  display:flex;justify-content:center;gap:1rem;
+  flex-wrap:wrap;margin-bottom:2.5rem;
+}
+.reaction-btn {
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:14px;padding:1rem 1.25rem;cursor:pointer;
+  transition:all .2s;min-width:90px;
+}
+.reaction-btn:hover,.reaction-btn.sel {
+  border-color:var(--amber);
+  background:var(--amber-lt);
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(200,136,42,.15);
+}
+.reaction-emoji { font-size:1.6rem; }
+.reaction-label {
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--stone);
+}
+
+/* Interest scale */
+.scale-wrap { margin-bottom:2.5rem; }
+.scale-label {
+  display:flex;justify-content:space-between;
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--stone);
+  margin-bottom:.75rem;
+}
+.scale-dots {
+  display:flex;justify-content:center;gap:.75rem;
+}
+.scale-dot {
+  width:36px;height:36px;border-radius:50%;
+  background:var(--white);border:1.5px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:.72rem;color:var(--stone);
+  transition:all .2s;
+}
+.scale-dot:hover,.scale-dot.sel {
+  background:var(--amber);border-color:var(--amber);color:var(--white);
+  transform:scale(1.15);
+}
+
+/* Form */
+.feedback-form {
+  background:var(--white);border:1px solid var(--border);
+  border-radius:20px;padding:2rem;margin-bottom:1.5rem;
+  text-align:left;
+}
+.form-label {
+  font-family:'DM Mono',monospace;font-size:.62rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--stone);display:block;margin-bottom:.6rem;
+}
+.form-input,.form-textarea {
+  width:100%;
+  background:var(--ivory);border:1.5px solid var(--border);
+  color:var(--ink);font-family:'DM Sans',sans-serif;font-size:.92rem;
+  padding:.85rem 1rem;border-radius:8px;outline:none;
+  transition:border-color .2s;margin-bottom:1.25rem;
+}
+.form-input:focus,.form-textarea:focus { border-color:var(--amber); }
+.form-input::placeholder,.form-textarea::placeholder { color:var(--stone);opacity:.7; }
+.form-textarea { min-height:100px;resize:vertical; }
+
+.submit-btn {
+  width:100%;background:var(--ink);color:var(--ivory);
+  font-family:'DM Sans',sans-serif;font-weight:600;
+  font-size:.9rem;letter-spacing:.04em;text-transform:uppercase;
+  padding:1rem;border:none;cursor:pointer;border-radius:8px;
+  transition:background .2s,transform .15s;
+}
+.submit-btn:hover { background:var(--amber);transform:translateY(-1px); }
+.submit-success {
+  display:none;text-align:center;padding:2rem;
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:1.2rem;color:var(--amber-dk);
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────── */
+footer {
+  background:var(--ink);
+  padding:3rem;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+}
+.footer-brand {
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-weight:900;font-size:1.2rem;color:rgba(250,246,240,.85);
+}
+.footer-brand span { color:var(--amber); }
+.footer-back {
+  font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(250,246,240,.4);
+  text-decoration:none;cursor:pointer;transition:color .2s;
+}
+.footer-back:hover { color:var(--amber); }
+.footer-copy {
+  font-size:.72rem;letter-spacing:.05em;
+  color:rgba(250,246,240,.3);
+}
+
+/* ── SCROLL ANIMATIONS ───────────────────────────────────────────────── */
+.reveal {
+  opacity:0;transform:translateY(28px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity:1;transform:translateY(0); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+@media (max-width:900px) {
+  #hero { grid-template-columns:1fr;padding:7rem 1.5rem 3rem;gap:3rem; }
+  .hero-visual { height:320px; }
+  .problem-inner { grid-template-columns:1fr;gap:3rem; }
+  .pyramid-wrap { grid-template-columns:1fr;gap:2.5rem; }
+  .layers-grid { grid-template-columns:1fr; }
+  .product-grid { grid-template-columns:1fr;gap:3rem; }
+  .steps-row { grid-template-columns:1fr 1fr;gap:2rem; }
+  .steps-row::before { display:none; }
+  nav { padding:.9rem 1.5rem; }
+  .nav-cta { display:none; }
+  #problem,#science,#product,#how,#interest { padding:5rem 1.5rem; }
+}
+@media (max-width:600px) {
+  .steps-row { grid-template-columns:1fr; }
+  .reactions { gap:.6rem; }
+  .scale-dots { gap:.5rem; }
+  .scale-dot { width:28px;height:28px;font-size:.65rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────────────────────────── -->
+<nav id="main-nav">
+  <a class="nav-brand" href="#">Scent<span>Strip</span></a>
+  <div class="nav-right">
+    <a class="nav-link" onclick="goTo('#problem')">The Problem</a>
+    <a class="nav-link" onclick="goTo('#science')">The Science</a>
+    <a class="nav-link" onclick="goTo('#product')">The Product</a>
+    <button class="nav-cta" onclick="goTo('#interest')">Express Interest</button>
+  </div>
+</nav>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg-grain"></div>
+
+  <div class="hero-text reveal">
+    <div class="hero-eyebrow">A Dhandha Concept</div>
+    <h1 class="hero-title">
+      Fragrance.<br>
+      <em>Reinvented</em><br>
+      to wear.
+    </h1>
+    <p class="hero-sub">
+      A precision-engineered scent strip that adheres to your clothing — lasting all day, costing a fraction of a bottle, and changing the way you carry fragrance forever.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="goTo('#science')">See the science</button>
+      <button class="btn-ghost" onclick="goTo('#interest')">I'm interested →</button>
+    </div>
+  </div>
+
+  <div class="hero-visual reveal">
+    <div class="strip-scene">
+
+      <!-- Drop shadow on surface -->
+      <div class="strip-shadow"></div>
+
+      <!-- Backing paper peeking from under strip -->
+      <div class="strip-backing-paper"></div>
+
+      <!-- THE STRIP -->
+      <div class="strip-body">
+        <div class="strip-texture"></div>
+        <div class="strip-foil-top"></div>
+        <div class="scent-waves">
+          <div class="wave-line"></div>
+          <div class="wave-line"></div>
+          <div class="wave-line"></div>
+          <div class="wave-line"></div>
+          <div class="wave-line"></div>
+        </div>
+        <div class="strip-logo">
+          <div class="strip-logo-text">ScentStrip</div>
+          <span class="strip-logo-scent">Fragrance · Redefined</span>
+          <span class="strip-logo-name">Sandalwood & Cedar</span>
+        </div>
+        <div class="strip-bottom-info">
+          <span class="strip-info-pill">EDP 20%</span>
+          <span class="strip-info-pill">8h Wear</span>
+          <span class="strip-info-pill">Fabric Safe</span>
+        </div>
+        <canvas id="peel-canvas"></canvas>
+      </div>
+
+      <!-- Peel hint / reset -->
+      <div class="peel-hint" id="peel-hint">↑ Drag up to peel</div>
+      <div class="peel-reset" id="peel-reset" onclick="resetPeel()">↺ Peel again</div>
+
+      <!-- Floating scent word tags -->
+      <div class="scent-note-float" style="top:80px;left:-52px;animation-delay:0s;animation-duration:6s">Sandalwood</div>
+      <div class="scent-note-float" style="top:170px;right:-44px;animation-delay:2.2s;animation-duration:7s">Oud</div>
+      <div class="scent-note-float" style="bottom:140px;left:-44px;animation-delay:4s;animation-duration:6.5s">Cedar</div>
+      <div class="scent-note-float" style="top:260px;right:-50px;animation-delay:1s;animation-duration:8s">Bergamot</div>
+
+    </div>
+  </div>
+
+  <div class="hero-scroll" id="scroll-hint">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- Fixed page-level trash ball and bin — used after 100% peel -->
+<div id="page-ball"></div>
+<div id="page-bin">
+  <div class="dustbin-wrap">
+    <div class="dustbin-handle"></div>
+    <div class="dustbin-lid"></div>
+    <div class="dustbin-body"></div>
+  </div>
+</div>
+
+<!-- ── PROBLEM ────────────────────────────────────────────────────────────── -->
+<section id="problem">
+  <div class="problem-inner">
+    <div class="reveal">
+      <p class="problem-tag">The Problem</p>
+      <h2 class="problem-title">
+        Perfume was<br>never designed<br>for <em>real life.</em>
+      </h2>
+      <div class="problem-body">
+        <p>A good perfume in India costs <strong>₹2,000–₹15,000.</strong> It runs out in weeks if you use it daily. You carry it in your bag and it breaks. You spray it in the morning and by noon it's gone.</p>
+        <p>The format hasn't changed in 100 years. The glass bottle, the pump, the liquid — it's fragile, expensive, and wasteful. There had to be a better way.</p>
+      </div>
+    </div>
+    <div class="pain-cards reveal">
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <div class="pain-title">Expensive to buy</div>
+        <div class="pain-desc">₹3,000+ for a bottle most people can't afford to use freely every day. Budget fragrances compromise on quality.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">⏳</div>
+        <div class="pain-title">Doesn't last the day</div>
+        <div class="pain-desc">Sprayed on skin, fragrance evaporates within 4–6 hours. You're unscented by the time it matters most.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">🎒</div>
+        <div class="pain-title">Impossible to carry</div>
+        <div class="pain-desc">Glass bottles break. Travel-sized versions are expensive per ml. Rollerballs compromise the scent.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCIENCE ────────────────────────────────────────────────────────────── -->
+<section id="science">
+  <div class="science-inner">
+    <div class="science-header reveal">
+      <p class="science-eyebrow">The Science</p>
+      <h2 class="science-title">Every scent tells<br>a <em>layered story.</em></h2>
+    </div>
+
+    <div class="pyramid-wrap">
+      <!-- SVG Pyramid -->
+      <div class="pyramid-svg-wrap reveal">
+        <svg class="pyramid-svg" viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Base note layer -->
+          <g class="pyramid-layer" id="layer-base" onclick="showNote('base')" data-layer="base">
+            <polygon points="20,280 300,280 260,200 60,200" fill="#8B5E10" rx="4"/>
+            <text x="160" y="248" text-anchor="middle" font-family="DM Mono" font-size="11" fill="rgba(255,255,255,0.9)" letter-spacing="2" text-transform="uppercase">BASE NOTES</text>
+            <text x="160" y="264" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.6)">6–8 hours</text>
+          </g>
+          <!-- Middle note layer -->
+          <g class="pyramid-layer" id="layer-middle" onclick="showNote('middle')" data-layer="middle">
+            <polygon points="60,196 260,196 230,130 90,130" fill="#C88828"/>
+            <text x="160" y="168" text-anchor="middle" font-family="DM Mono" font-size="11" fill="rgba(255,255,255,0.9)" letter-spacing="2">HEART NOTES</text>
+            <text x="160" y="184" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.6)">3–5 hours</text>
+          </g>
+          <!-- Top note layer -->
+          <g class="pyramid-layer" id="layer-top" onclick="showNote('top')" data-layer="top">
+            <polygon points="90,126 230,126 200,60 120,60" fill="#C8A882"/>
+            <text x="160" y="96" text-anchor="middle" font-family="DM Mono" font-size="11" fill="rgba(255,255,255,0.9)" letter-spacing="2">TOP NOTES</text>
+            <text x="160" y="112" text-anchor="middle" font-family="DM Sans" font-size="10" fill="rgba(255,255,255,0.7)">0–2 hours</text>
+          </g>
+          <!-- Apex -->
+          <g class="pyramid-layer" id="layer-apex" onclick="showNote('top')">
+            <polygon points="120,56 200,56 160,10" fill="#E8C87A"/>
+          </g>
+          <!-- Click hint -->
+          <text x="160" y="296" text-anchor="middle" font-family="DM Mono" font-size="9" fill="#8A7A6E" letter-spacing="1">Click a layer to explore</text>
+        </svg>
+      </div>
+
+      <!-- Note info panel -->
+      <div class="pyramid-info reveal">
+        <div class="note-display" id="note-display">
+          <div class="note-display-tag" style="color:var(--amber)">Click any layer</div>
+          <div class="note-display-title">The scent pyramid</div>
+          <div class="note-display-body">
+            Every fragrance — from the most expensive perfume to ScentStrip — is built on three layers of scent that unfold over time. This is what makes a fragrance complex, interesting, and personal.
+            <br><br>
+            ScentStrip is engineered to deliver all three layers from a strip thinner than 3mm.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer cards -->
+    <div class="layers-grid reveal">
+      <div class="layer-card top">
+        <div class="layer-card-label">Top Notes</div>
+        <div class="layer-card-title">The first impression</div>
+        <div class="layer-card-desc">Light, bright molecules that hit immediately. Citrus, herbs, light florals. Gone in 30–120 minutes but they're what makes you stop someone and say "you smell amazing."</div>
+      </div>
+      <div class="layer-card middle">
+        <div class="layer-card-label">Heart Notes</div>
+        <div class="layer-card-title">The soul of the scent</div>
+        <div class="layer-card-desc">The heart of the fragrance that emerges once top notes fade. Deeper florals, spices, woods. This is what you smell for most of the day — lasting 3 to 5 hours.</div>
+      </div>
+      <div class="layer-card base">
+        <div class="layer-card-label">Base Notes</div>
+        <div class="layer-card-title">What lingers</div>
+        <div class="layer-card-desc">Heavy, rich molecules — oud, sandalwood, musk, cedar, amber. These anchor the scent and can last 6–8 hours on fabric. ScentStrip's glycerin base holds and releases these slowly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCT ────────────────────────────────────────────────────────────── -->
+<section id="product">
+  <div class="product-inner">
+    <div class="product-header reveal">
+      <p class="science-eyebrow">The Product</p>
+      <h2 class="section-title" style="font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(2rem,4vw,3.4rem);line-height:1.02;letter-spacing:-.025em;">
+        A strip. <em style="font-style:italic;color:var(--amber)">Engineered</em> to perfection.
+      </h2>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-specs reveal">
+        <div class="spec-row">
+          <div class="spec-icon">🧪</div>
+          <div>
+            <div class="spec-label">Core Material</div>
+            <div class="spec-val">Glycerin soap base — food-safe, skin-safe, holds fragrance oil for controlled slow release over hours.</div>
+          </div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-icon">📏</div>
+          <div>
+            <div class="spec-label">Dimensions</div>
+            <div class="spec-val">~70mm × 25mm × 2–3mm. Thinner than a coin stack. Invisible under a collar or on an inner hem.</div>
+          </div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-icon">🔗</div>
+          <div>
+            <div class="spec-label">Adhesive</div>
+            <div class="spec-val">Repositionable microsphere acrylic adhesive — sticks firmly, peels cleanly. No residue on fabric, no damage on reuse.</div>
+          </div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-icon">⏱</div>
+          <div>
+            <div class="spec-label">Wear Time</div>
+            <div class="spec-val">6–8 hours of active scent release. Designed for a full workday, a full date night, a full journey.</div>
+          </div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-icon">💧</div>
+          <div>
+            <div class="spec-label">Fragrance Load</div>
+            <div class="spec-val">15–25% fragrance oil concentration — equivalent to an Eau de Parfum, not a watery cologne.</div>
+          </div>
+        </div>
+        <div class="spec-row">
+          <div class="spec-icon">♻️</div>
+          <div>
+            <div class="spec-label">Format</div>
+            <div class="spec-val">Single-use strips in a compact carry-pack. Monthly subscription refills planned. Zero glass, zero breakage.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="showcase-visual reveal">
+
+        <!-- Three strips fanned out — top view -->
+        <div class="strips-fan">
+          <div class="fan-strip fan-s1">
+            <span class="fan-strip-label">Rose Oud</span>
+            <div class="fan-strip-info">
+              <span class="fan-strip-size">70 × 25mm</span>
+              <span class="fan-strip-duration">8h wear</span>
+            </div>
+          </div>
+          <div class="fan-strip fan-s2">
+            <span class="fan-strip-label">Sandalwood</span>
+            <div class="fan-strip-info">
+              <span class="fan-strip-size">70 × 25mm</span>
+              <span class="fan-strip-duration">8h wear</span>
+            </div>
+          </div>
+          <div class="fan-strip fan-s3">
+            <span class="fan-strip-label">Fresh Linen</span>
+            <div class="fan-strip-info">
+              <span class="fan-strip-size">70 × 25mm</span>
+              <span class="fan-strip-duration">6h wear</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cross-section diagram -->
+        <div class="cross-section">
+          <span class="cross-label">Cross-section · 3mm actual thickness</span>
+          <div class="cross-layers">
+            <div class="cross-layer cl-gloss">
+              <div class="cross-layer-swatch" style="background:rgba(255,255,255,.9);border:1px solid #ddd"></div>
+              <span class="cross-layer-name">Surface gloss coat</span>
+              <span class="cross-layer-desc">Smooth finish · ~0.1mm</span>
+            </div>
+            <div class="cross-layer cl-top">
+              <div class="cross-layer-swatch" style="background:#E8C87A"></div>
+              <span class="cross-layer-name">Top note zone</span>
+              <span class="cross-layer-desc">Citrus · Herb · 0–2h</span>
+            </div>
+            <div class="cross-layer cl-mid">
+              <div class="cross-layer-swatch" style="background:#C8882A"></div>
+              <span class="cross-layer-name">Heart note core</span>
+              <span class="cross-layer-desc">Florals · Spice · 3–5h</span>
+            </div>
+            <div class="cross-layer cl-base">
+              <div class="cross-layer-swatch" style="background:#8B5E10"></div>
+              <span class="cross-layer-name">Base note anchor</span>
+              <span class="cross-layer-desc">Oud · Musk · 6–8h</span>
+            </div>
+            <div class="cross-layer cl-glyc">
+              <div class="cross-layer-swatch" style="background:#C4A882"></div>
+              <span class="cross-layer-name">Glycerin carrier matrix</span>
+              <span class="cross-layer-desc">Soap base · Holds oils</span>
+            </div>
+            <div class="cross-layer cl-adhesive">
+              <div class="cross-layer-swatch" style="background:rgba(180,160,120,.5);border:1px dashed #bba"></div>
+              <span class="cross-layer-name">Microsphere adhesive</span>
+              <span class="cross-layer-desc">Repositionable · No residue</span>
+            </div>
+            <div class="cross-layer cl-liner">
+              <div class="cross-layer-swatch" style="background:#f0ebe2;border:1px solid #ddd"></div>
+              <span class="cross-layer-name">Silicone release liner</span>
+              <span class="cross-layer-desc">Peel before use</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Packaging sleeve -->
+        <div class="packaging-sleeve">
+          <div class="sleeve-strip-preview"></div>
+          <div class="sleeve-text">
+            <div class="sleeve-brand">ScentStrip</div>
+            <span class="sleeve-scent">Sandalwood · Cedar · Amber</span>
+            <span class="sleeve-count">7 strips · 1 week supply</span>
+          </div>
+          <div class="sleeve-badges">
+            <span class="sleeve-badge">EDP Concentration</span>
+            <span class="sleeve-badge">Skin Safe · IFRA</span>
+            <span class="sleeve-badge">Zero Glass</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ───────────────────────────────────────────────────────── -->
+<section id="how">
+  <div class="how-inner">
+    <p class="how-tag reveal">How it works</p>
+    <h2 class="how-title reveal">
+      Three steps.<br><em>All day scent.</em>
+    </h2>
+    <div class="steps-row">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-title">Peel</div>
+        <div class="step-desc">Lift the backing paper from your ScentStrip to expose the repositionable adhesive. Takes 2 seconds.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-title">Place</div>
+        <div class="step-desc">Press firmly onto the inside of your collar, waistband, or inner hem. It stays exactly where you put it.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-title">Wear</div>
+        <div class="step-desc">Your body heat gently warms the strip throughout the day, releasing fragrance in slow, natural waves.</div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div class="step-title">Peel off</div>
+        <div class="step-desc">At the end of the day, peel it off cleanly. No residue. No stain. Ready for a fresh strip tomorrow.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INTEREST / FEEDBACK ────────────────────────────────────────────────── -->
+<section id="interest">
+  <div class="interest-inner">
+    <p class="interest-eyebrow reveal">Your Voice Matters</p>
+    <h2 class="interest-title reveal">
+      Would you<br><em>wear this?</em>
+    </h2>
+    <p class="interest-sub reveal">
+      ScentStrip is a concept in active development. Your honest reaction — good, bad, or "meh" — directly shapes what gets built next. This is how Dhandha works: in public, with real people.
+    </p>
+
+    <!-- Reactions -->
+    <div class="reactions reveal">
+      <button class="reaction-btn" onclick="selectReaction(this)">
+        <span class="reaction-emoji">🔥</span>
+        <span class="reaction-label">I need this</span>
+      </button>
+      <button class="reaction-btn" onclick="selectReaction(this)">
+        <span class="reaction-emoji">🤔</span>
+        <span class="reaction-label">Interesting</span>
+      </button>
+      <button class="reaction-btn" onclick="selectReaction(this)">
+        <span class="reaction-emoji">💡</span>
+        <span class="reaction-label">Has potential</span>
+      </button>
+      <button class="reaction-btn" onclick="selectReaction(this)">
+        <span class="reaction-emoji">😐</span>
+        <span class="reaction-label">Not for me</span>
+      </button>
+      <button class="reaction-btn" onclick="selectReaction(this)">
+        <span class="reaction-emoji">❓</span>
+        <span class="reaction-label">Tell me more</span>
+      </button>
+    </div>
+
+    <!-- Interest scale -->
+    <div class="scale-wrap reveal">
+      <div class="scale-label">
+        <span>Not likely to buy</span>
+        <span>Would buy immediately</span>
+      </div>
+      <div class="scale-dots" id="scale-dots">
+        <div class="scale-dot" onclick="selectScale(1)">1</div>
+        <div class="scale-dot" onclick="selectScale(2)">2</div>
+        <div class="scale-dot" onclick="selectScale(3)">3</div>
+        <div class="scale-dot" onclick="selectScale(4)">4</div>
+        <div class="scale-dot" onclick="selectScale(5)">5</div>
+        <div class="scale-dot" onclick="selectScale(6)">6</div>
+        <div class="scale-dot" onclick="selectScale(7)">7</div>
+        <div class="scale-dot" onclick="selectScale(8)">8</div>
+        <div class="scale-dot" onclick="selectScale(9)">9</div>
+        <div class="scale-dot" onclick="selectScale(10)">10</div>
+      </div>
+    </div>
+
+    <!-- Message form -->
+    <div class="feedback-form reveal" id="feedback-form">
+      <label class="form-label">Your name (optional)</label>
+      <input class="form-input" type="text" placeholder="e.g. Priya">
+      <label class="form-label">Your thoughts</label>
+      <textarea class="form-textarea" placeholder="What excites you? What worries you? What would make you buy it? Any format is fine — one line or a paragraph."></textarea>
+      <label class="form-label">Email — if you want to hear when this launches</label>
+      <input class="form-input" type="email" placeholder="your@email.com">
+      <button class="submit-btn" onclick="submitFeedback()">Send My Feedback</button>
+    </div>
+    <div class="submit-success" id="submit-success">
+      Thank you — your feedback lands directly with the founder. ✦
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-brand">Scent<span>Strip</span></div>
+  <a class="footer-back" href="../../index.html">← Back to Dhandha</a>
+  <div class="footer-copy">A concept by Daivik Domadiya · © 2026</div>
+</footer>
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
+<script>
+/* ── NAV scroll ───────────────────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+  document.getElementById('scroll-hint').style.opacity = window.scrollY > 80 ? '0' : '.5';
+});
+
+/* ── Section scroll helper ────────────────────────────────────────────── */
+function goTo(id) {
+  document.querySelector(id).scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── Scroll reveal ────────────────────────────────────────────────────── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── Pyramid note display ─────────────────────────────────────────────── */
+const NOTES = {
+  top: {
+    color: '#C8A882', tag: 'Top Notes · 0–2 hours', title: 'The first hello',
+    body: 'Top notes are the first thing your nose meets — light, airy, and fast-evaporating. They create the crucial first impression. In ScentStrip, top notes like bergamot, lemon, or light herbs hit immediately when you first peel the strip.',
+    examples: ['Bergamot','Lemon','Grapefruit','Basil','Mint','Green tea']
+  },
+  middle: {
+    color: '#C88828', tag: 'Heart Notes · 3–5 hours', title: 'The heart of the matter',
+    body: 'Heart notes emerge as top notes fade and form the core character of the fragrance. They\'re the notes people usually describe when they say "that smells like you." In ScentStrip, the glycerin matrix releases heart notes steadily as your body warms the strip.',
+    examples: ['Rose','Jasmine','Cardamom','Geranium','Cinnamon','Ylang ylang']
+  },
+  base: {
+    color: '#8B5E10', tag: 'Base Notes · 6–8 hours', title: 'What stays with you',
+    body: 'Base notes are heavy, rich molecules that cling to fabric beautifully. Oud, sandalwood, musk, amber — these are why a shirt you wore yesterday still smells like you. ScentStrip\'s glycerin base is specifically engineered to hold and slowly release these molecules all day.',
+    examples: ['Oud','Sandalwood','Cedar','Musk','Amber','Vanilla']
+  }
+};
+function showNote(type) {
+  const n = NOTES[type];
+  const d = document.getElementById('note-display');
+  d.style.opacity = '0'; d.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    d.innerHTML = `<div class="note-display-tag" style="color:${n.color}">${n.tag}</div>
+      <div class="note-display-title">${n.title}</div>
+      <div class="note-display-body">${n.body}</div>
+      <div class="note-examples">${n.examples.map(ex=>`<span class="note-chip">${ex}</span>`).join('')}</div>`;
+    d.style.opacity = '1'; d.style.transform = 'translateY(0)';
+    d.style.transition = 'opacity .3s ease, transform .3s ease';
+  }, 160);
+}
+
+function selectReaction(btn) {
+  document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+let selectedScale = null;
+function selectScale(n) {
+  selectedScale = n;
+  document.querySelectorAll('.scale-dot').forEach((d,i) => d.classList.toggle('sel', i < n));
+}
+function submitFeedback() {
+  document.getElementById('feedback-form').style.display = 'none';
+  document.getElementById('submit-success').style.display = 'block';
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CANVAS PEEL ENGINE
+   ════════════════════════════════════════════════════════════════════════
+   Strategy:
+   - We draw the liner as a 2D polygon on a canvas that sits exactly over
+     the strip body.
+   - The liner is hinged along its top-left edge. The free corner is the
+     bottom-right. As the user drags that corner upward / leftward we
+     compute how far "peeled" the liner is (0–1) and redraw every frame.
+   - To simulate a realistic curl we split the liner into two triangles
+     separated by a curved fold line whose position moves with the peel.
+     The front face is cream/linen; the back face (exposed as it flips)
+     is a slightly darker, slightly reflective version showing the paper
+     was stuck to something.
+   - Shadow under the peeled section grows with progress.
+   - At progress === 1 we fire the crumple → ball → toss → bin sequence
+     entirely in canvas animation — no CSS transform abuse.
+*/
+(() => {
+  const canvas  = document.getElementById('peel-canvas');
+  const hint    = document.getElementById('peel-hint');
+  const resetBtn= document.getElementById('peel-reset');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0;         // canvas logical size (matches strip body px)
+  let progress = 0;         // 0 = fully stuck, 1 = fully peeled off
+  let dragging = false;
+  let startY = 0, startP = 0;
+  let locked = false;       // true while crumple/toss animation runs
+  let rafId = null;
+  let phase = 'idle';       // idle | peeling | crumpling | tossing | done
+
+  // Ball physics for toss animation
+  const ball = { x:0, y:0, r:14, vx:0, vy:0, spin:0, alpha:1 };
+
+  /* ── Size canvas to match the strip body element ── */
+  function resize() {
+    const body = canvas.parentElement;
+    const dpr  = window.devicePixelRatio || 1;
+    W = body.offsetWidth;
+    H = body.offsetHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* ── DRAW the liner at current progress ── */
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    if (phase === 'done') return;
+    if (phase === 'crumpling' || phase === 'tossing') { drawBall(); return; }
+
+    const p = Math.min(1, Math.max(0, progress));
+    const r = 14;
+
+    /*
+      HORIZONTAL BOTTOM-TO-TOP PEEL
+      ─────────────────────────────
+      The fold line is a horizontal line that starts at the bottom (p=0)
+      and sweeps upward to the top (p=1).
+
+      foldY = H * (1 - p)        — y position of the fold line
+
+      ABOVE foldY  → still stuck to strip (front face, cream paper)
+      BELOW foldY  → peeled back (back face, slightly darker adhesive side)
+
+      The peeled section curves away from the strip. We simulate this by
+      drawing the back face slightly offset and with a curl shadow below
+      the fold line, giving the impression the paper is lifting off.
+    */
+    const foldY = H * (1 - p);
+
+    /* ── Shadow that pools under the peeling edge ── */
+    if (p > 0.01) {
+      const shadowH = Math.min(24, p * 40);
+      const grad = ctx.createLinearGradient(0, foldY, 0, foldY + shadowH);
+      grad.addColorStop(0,   `rgba(0,0,0,${0.22 * Math.min(1, p * 3)})`);
+      grad.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, foldY, W, shadowH);
+    }
+
+    /* ── Front face: paper above the fold line (still stuck) ── */
+    if (foldY > 0) {
+      ctx.save();
+      ctx.beginPath();
+      if (foldY >= H) {
+        // full cover
+        ctx.roundRect(0, 0, W, H, r);
+      } else {
+        // cover top portion down to foldY
+        ctx.moveTo(r, 0);
+        ctx.lineTo(W - r, 0);
+        ctx.arcTo(W, 0, W, r, r);
+        ctx.lineTo(W, foldY);
+        ctx.lineTo(0, foldY);
+        ctx.lineTo(0, r);
+        ctx.arcTo(0, 0, r, 0, r);
+        ctx.closePath();
+      }
+      ctx.clip();
+
+      // Cream paper gradient
+      const paperGrad = ctx.createLinearGradient(0, 0, W, H);
+      paperGrad.addColorStop(0,   '#fdfbf7');
+      paperGrad.addColorStop(0.5, '#f6f0e6');
+      paperGrad.addColorStop(1,   '#ece2d2');
+      ctx.fillStyle = paperGrad;
+      ctx.fill();
+
+      // Vertical guide lines
+      ctx.strokeStyle = 'rgba(180,155,115,0.13)';
+      ctx.lineWidth = 1;
+      for (let x = 12; x < W; x += 11) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, foldY); ctx.stroke();
+      }
+
+      // "PEEL HERE" text — fades quickly as peel starts
+      const textAlpha = Math.max(0, 1 - p * 5);
+      if (textAlpha > 0) {
+        ctx.save();
+        ctx.globalAlpha = textAlpha * 0.5;
+        ctx.font = '500 8px "DM Mono", monospace';
+        ctx.fillStyle = 'rgba(100,70,30,1)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('PEEL  HERE', W / 2, foldY - 20 < 12 ? 12 : foldY - 20);
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    /* ── Fold crease line ── */
+    if (p > 0.01 && p < 0.99) {
+      ctx.save();
+      const creaseGrad = ctx.createLinearGradient(0, foldY, W, foldY);
+      creaseGrad.addColorStop(0,   'rgba(0,0,0,0.06)');
+      creaseGrad.addColorStop(0.5, 'rgba(0,0,0,0.22)');
+      creaseGrad.addColorStop(1,   'rgba(0,0,0,0.06)');
+      ctx.strokeStyle = creaseGrad;
+      ctx.lineWidth   = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, foldY);
+      ctx.lineTo(W, foldY);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* ── Back face: adhesive side below the fold (peeled section) ── */
+    if (p > 0.01) {
+      ctx.save();
+      ctx.beginPath();
+      if (foldY <= 0) {
+        // fully peeled — whole canvas is back face
+        ctx.roundRect(0, 0, W, H, r);
+      } else {
+        // bottom section below foldY
+        ctx.moveTo(0, foldY);
+        ctx.lineTo(W, foldY);
+        ctx.lineTo(W, H - r);
+        ctx.arcTo(W, H, W - r, H, r);
+        ctx.lineTo(r, H);
+        ctx.arcTo(0, H, 0, H - r, r);
+        ctx.closePath();
+      }
+      ctx.clip();
+
+      // The back of the liner — adhesive tan, slightly reflective
+      const backGrad = ctx.createLinearGradient(0, foldY, 0, H);
+      backGrad.addColorStop(0,   '#e2d8c8');
+      backGrad.addColorStop(0.4, '#d0c4b0');
+      backGrad.addColorStop(1,   '#b8a890');
+      ctx.fillStyle = backGrad;
+      ctx.fill();
+
+      // Specular shimmer across the back face
+      const specGrad = ctx.createLinearGradient(0, foldY, W, H);
+      specGrad.addColorStop(0,   'rgba(255,255,255,0.18)');
+      specGrad.addColorStop(0.5, 'rgba(255,255,255,0.04)');
+      specGrad.addColorStop(1,   'rgba(255,255,255,0.12)');
+      ctx.fillStyle = specGrad;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    /* ── Peel progress label so user knows how far they've gone ── */
+    if (p > 0.05 && p < 0.98) {
+      const pct = Math.round(p * 100);
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.font = '600 9px "DM Mono", monospace';
+      ctx.fillStyle = p > 0.5 ? 'rgba(100,70,30,0.7)' : 'rgba(180,155,115,0.8)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // Show percent inside the back face area
+      const labelY = Math.min(H - 16, foldY + (H - foldY) * 0.5);
+      ctx.fillText(`${pct}%`, W / 2, labelY);
+      ctx.restore();
+    }
+
+    /* ── Corner tab — pulses when progress near 0 ── */
+    if (p < 0.12) {
+      const pulse = 0.5 + 0.5 * Math.sin(Date.now() / 380);
+      const tabR  = 22 + pulse * 5;
+      ctx.save();
+      ctx.shadowColor = 'rgba(139,94,16,0.3)';
+      ctx.shadowBlur  = 10 + pulse * 5;
+      ctx.beginPath();
+      ctx.arc(W / 2, H - 4, tabR, 0, Math.PI * 2);
+      const tabGrad = ctx.createRadialGradient(W/2 - tabR*0.3, H - 4 - tabR*0.3, 2, W/2, H - 4, tabR);
+      tabGrad.addColorStop(0, '#fff');
+      tabGrad.addColorStop(1, '#f0e4d0');
+      ctx.fillStyle = tabGrad;
+      ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.font = `bold ${13 + pulse * 2}px sans-serif`;
+      ctx.fillStyle = 'rgba(139,94,16,0.7)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('↑', W / 2, H - 4);
+      ctx.restore();
+    }
+  }
+
+  /* Idle animation loop (makes the tab pulse) */
+  function idleLoop() {
+    if (phase !== 'idle') return;
+    draw();
+    rafId = requestAnimationFrame(idleLoop);
+  }
+  phase = 'idle';
+  idleLoop();
+
+  /* ── DRAW the crumpled paper ball ── */
+  function drawBall() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    ctx.globalAlpha = ball.alpha;
+
+    // Ball shadow
+    ctx.beginPath();
+    ctx.ellipse(ball.x + 3, ball.y + 6, ball.r * 0.85, ball.r * 0.3, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.15)';
+    ctx.fill();
+
+    // Ball body
+    const bg = ctx.createRadialGradient(ball.x - ball.r * 0.3, ball.y - ball.r * 0.3, ball.r * 0.1, ball.x, ball.y, ball.r);
+    bg.addColorStop(0, '#fdf8f0');
+    bg.addColorStop(0.4, '#e8ddd0');
+    bg.addColorStop(0.8, '#c8b89c');
+    bg.addColorStop(1,   '#a89070');
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.fillStyle = bg;
+    ctx.fill();
+
+    // Crumple lines on the ball (random-ish but fixed)
+    ctx.save();
+    ctx.clip(); // clip to ball
+    ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.clip();
+    ctx.strokeStyle = 'rgba(100,75,45,0.2)';
+    ctx.lineWidth = 0.8;
+    const lines = [
+      [[-10,-8],[4,12]],[[-6,10],[12,-4]],[[8,-12],[-4,8]],
+      [[-12,2],[10,-6]],[[-2,-14],[6,10]],[[10,8],[-12,2]]
+    ];
+    lines.forEach(([a,b]) => {
+      ctx.beginPath();
+      ctx.moveTo(ball.x + a[0], ball.y + a[1]);
+      ctx.lineTo(ball.x + b[0], ball.y + b[1]);
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    ctx.restore();
+  }
+
+  /* ── CRUMPLE: liner collapses into ball at TOP of the strip ── */
+  function startCrumple() {
+    phase = 'crumpling';
+    cancelAnimationFrame(rafId);
+    ball.x = W / 2;
+    ball.y = 22;
+    ball.r = 16;
+    ball.alpha = 1;
+    const duration = 700;
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+      ball.r = 16 + (12 - 16) * e;
+      draw_crumple(e);
+      if (t < 1) { rafId = requestAnimationFrame(step); }
+      else        { startToss(); }
+    }
+    rafId = requestAnimationFrame(step);
+  }
+
+  function draw_crumple(t) {
+    ctx.clearRect(0, 0, W, H);
+    const rem = 1 - t;
+    if (rem > 0.01) {
+      ctx.save();
+      ctx.globalAlpha = rem;
+      ctx.translate(0, -H * t * 0.55);
+      ctx.scale(1 - t * 0.55, 1 - t * 0.65);
+      const g = ctx.createLinearGradient(0, 0, 0, H);
+      g.addColorStop(0, '#e2d8c8');
+      g.addColorStop(1, '#b8a890');
+      ctx.beginPath(); ctx.roundRect(0, 0, W, H, 14);
+      ctx.fillStyle = g; ctx.fill();
+      ctx.restore();
+    }
+    drawBall();
+  }
+
+  /* ── SOUNDS ── */
+  function playWind(durationSec) {
+    try {
+      const ac  = new (window.AudioContext || window.webkitAudioContext)();
+      const dur = durationSec;
+      const len = Math.ceil(ac.sampleRate * dur);
+      const buf = ac.createBuffer(1, len, ac.sampleRate);
+      const d   = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      const bp = ac.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(320, ac.currentTime);
+      bp.frequency.linearRampToValueAtTime(480, ac.currentTime + dur * 0.45);
+      bp.frequency.linearRampToValueAtTime(280, ac.currentTime + dur);
+      bp.Q.value = 1.3;
+      const gain = ac.createGain();
+      gain.gain.setValueAtTime(0, ac.currentTime);
+      gain.gain.linearRampToValueAtTime(0.38, ac.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.38, ac.currentTime + dur - 0.5);
+      gain.gain.linearRampToValueAtTime(0, ac.currentTime + dur);
+      src.connect(bp); bp.connect(gain); gain.connect(ac.destination);
+      src.start(); src.stop(ac.currentTime + dur);
+    } catch(e) {}
+  }
+
+  function playFallWhoosh(durationSec) {
+    try {
+      const ac  = new (window.AudioContext || window.webkitAudioContext)();
+      const dur = durationSec;
+      const len = Math.ceil(ac.sampleRate * dur);
+      const buf = ac.createBuffer(1, len, ac.sampleRate);
+      const d   = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      // Highpass that drops — sounds like falling through air
+      const hp = ac.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.setValueAtTime(2200, ac.currentTime);
+      hp.frequency.linearRampToValueAtTime(400, ac.currentTime + dur);
+      hp.Q.value = 0.7;
+      const gain = ac.createGain();
+      gain.gain.setValueAtTime(0, ac.currentTime);
+      gain.gain.linearRampToValueAtTime(0.45, ac.currentTime + dur * 0.15);
+      gain.gain.linearRampToValueAtTime(0.55, ac.currentTime + dur * 0.8);
+      gain.gain.linearRampToValueAtTime(0, ac.currentTime + dur);
+      src.connect(hp); hp.connect(gain); gain.connect(ac.destination);
+      src.start(); src.stop(ac.currentTime + dur);
+    } catch(e) {}
+  }
+
+  function playThud() {
+    try {
+      const ac = new (window.AudioContext || window.webkitAudioContext)();
+      const t  = ac.currentTime;
+      // Low thud — sine wave that drops fast
+      const osc = ac.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(150, t);
+      osc.frequency.linearRampToValueAtTime(45, t + 0.14);
+      const gain = ac.createGain();
+      gain.gain.setValueAtTime(0.7, t);
+      gain.gain.linearRampToValueAtTime(0, t + 0.22);
+      // Noise burst for the "clunk" texture
+      const nLen = Math.ceil(ac.sampleRate * 0.12);
+      const nBuf = ac.createBuffer(1, nLen, ac.sampleRate);
+      const nd   = nBuf.getChannelData(0);
+      for (let i = 0; i < nLen; i++) nd[i] = (Math.random()*2-1) * Math.pow(1 - i/nLen, 2);
+      const nSrc = ac.createBufferSource();
+      nSrc.buffer = nBuf;
+      const nGain = ac.createGain();
+      nGain.gain.value = 0.4;
+      osc.connect(gain); gain.connect(ac.destination);
+      nSrc.connect(nGain); nGain.connect(ac.destination);
+      osc.start(t); osc.stop(t + 0.24);
+      nSrc.start(t); nSrc.stop(t + 0.14);
+    } catch(e) {}
+  }
+
+  /* ── TOSS: spiral inward → top of page above bin → free fall → thud ── */
+  function startToss() {
+    phase = 'tossing';
+    cancelAnimationFrame(rafId);
+    ctx.clearRect(0, 0, W, H);
+
+    const pageBall = document.getElementById('page-ball');
+    const pageBin  = document.getElementById('page-bin');
+    if (!pageBall || !pageBin) return;
+
+    const ballSize = 38;
+    pageBall.style.cssText = `
+      position:fixed; width:${ballSize}px; height:${ballSize}px; border-radius:50%;
+      z-index:9999; pointer-events:none; display:block; opacity:1;
+      background: radial-gradient(circle at 32% 28%, #fdfaf5 0%, #e8ddd0 36%, #c8b89c 70%, #a08060 100%);
+      box-shadow: 3px 5px 16px rgba(0,0,0,0.32), inset -3px -3px 8px rgba(80,50,20,0.18), inset 2px 2px 5px rgba(255,255,255,0.14);
+    `;
+
+    const stripEl = canvas.parentElement;
+    const sRect   = stripEl.getBoundingClientRect();
+    const startBX = sRect.left + sRect.width / 2;
+    const startBY = sRect.top  + 14;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Bin fixed bottom-right
+    const rem2  = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2;
+    const binCX = vw - rem2 - 32;   // horizontal centre of bin
+    const binCY = vh - rem2 - 30;   // vertical centre of bin body
+
+    // Free fall: ball hangs at very TOP of viewport, x = binCX
+    const fallStartX = binCX;
+    const fallStartY = 20;           // px from top — top of page
+
+    /*
+      TIMELINE
+      ─────────────────────────────────────────────────────────
+      0.00 – 0.30s  launch:  strip top → circle 12-o'clock
+      0.30 – 3.30s  spiral:  one full clockwise loop, shrinking radius,
+                    centre drifts so exit = (fallStartX, fallStartY)
+      3.30 – 3.80s  hover:   floating at top of page, x = binCX
+      3.80 – 5.20s  freefall: straight down from y=20 to binCY
+      5.20s          thud → lid closes → bin fades
+    */
+    const launchDur = 0.30;
+    const circleDur = 3.00;
+    const hoverDur  = 0.50;
+    const fallDur   = 1.40;
+
+    // Spiral maths:
+    // Entry point = 12-o'clock of large circle centred on screen
+    const circCX     = vw / 2;
+    const circCY     = vh / 2;
+    const circRStart = Math.min(vw, vh) * 0.30;
+
+    // Exit point of spiral = fallStartX, fallStartY
+    // Angle at exit = -π/2 + 2π = -π/2 (12-o'clock, clockwise full loop)
+    // exitX = finalCCX + finalR * cos(-π/2) = finalCCX + 0 = finalCCX
+    // exitY = finalCCY + finalR * sin(-π/2) = finalCCY - finalR
+    // So: finalCCX = fallStartX, finalCCY = fallStartY + finalR
+    const finalR   = 38;
+    const finalCCX = fallStartX;
+    const finalCCY = fallStartY + finalR;
+
+    // Show bin just before hover ends so user sees it open while ball waits at top
+    const binShowMs = (launchDur + circleDur + hoverDur - 0.45) * 1000;
+    setTimeout(() => {
+      pageBin.classList.add('show');
+      setTimeout(() => pageBin.classList.add('catch'), 200);
+    }, binShowMs);
+
+    // Wind for launch + spiral + hover
+    playWind(launchDur + circleDur + hoverDur);
+
+    const startTime = performance.now();
+    let   spin = 0;
+
+    function animateBall(now) {
+      const elapsed = (now - startTime) / 1000;
+      let bx, by, size = ballSize, alpha = 1;
+
+      if (elapsed < launchDur) {
+        // ── LAUNCH ──
+        const sub  = elapsed / launchDur;
+        const ease = sub * sub * (3 - 2*sub);
+        const entryX = circCX + circRStart * Math.cos(-Math.PI / 2);
+        const entryY = circCY + circRStart * Math.sin(-Math.PI / 2);
+        bx = startBX + (entryX - startBX) * ease;
+        by = startBY + (entryY - startBY) * ease;
+
+      } else if (elapsed < launchDur + circleDur) {
+        // ── SPIRAL: radius linearly shrinks, centre drifts to above bin ──
+        const sub   = (elapsed - launchDur) / circleDur;        // 0 → 1
+        const angle = -Math.PI/2 + sub * 2 * Math.PI;           // clockwise
+        const r     = circRStart + (finalR   - circRStart) * sub;
+        const ccx   = circCX    + (finalCCX  - circCX)    * sub;
+        const ccy   = circCY    + (finalCCY  - circCY)    * sub;
+        bx = ccx + r * Math.cos(angle);
+        by = ccy + r * Math.sin(angle);
+
+      } else if (elapsed < launchDur + circleDur + hoverDur) {
+        // ── HOVER: at top of page, x = binCX, gentle bob ──
+        const hSub = (elapsed - launchDur - circleDur) / hoverDur;
+        bx = fallStartX;
+        by = fallStartY + Math.sin(hSub * Math.PI * 4) * 5;
+
+      } else {
+        // ── FREE FALL: straight down, ease-in cubic (gravity) ──
+        const fSub   = (elapsed - launchDur - circleDur - hoverDur) / fallDur;
+        const fClamp = Math.min(1, fSub);
+        const fEase  = fClamp * fClamp * fClamp;   // cubic — slow start, fast finish
+        bx = fallStartX;
+        by = fallStartY + (binCY - fallStartY) * fEase;
+
+        // Shrink + fade entering bin (last 20%)
+        const entryFrac = Math.max(0, (fClamp - 0.80) / 0.20);
+        size  = ballSize * (1 - entryFrac * 0.9);
+        alpha = 1 - entryFrac;
+
+        // Fall whoosh fires once
+        if (fSub <= 0.016 && !pageBall._fallSoundPlayed) {
+          pageBall._fallSoundPlayed = true;
+          playFallWhoosh(fallDur * 0.9);
+        }
+      }
+
+      spin += elapsed < launchDur + circleDur ? 4 : 1.5;
+      pageBall.style.left      = (bx - size/2) + 'px';
+      pageBall.style.top       = (by - size/2) + 'px';
+      pageBall.style.width     = size + 'px';
+      pageBall.style.height    = size + 'px';
+      pageBall.style.opacity   = alpha;
+      pageBall.style.transform = `rotate(${spin}deg)`;
+
+      if (elapsed < launchDur + circleDur + hoverDur + fallDur) {
+        rafId = requestAnimationFrame(animateBall);
+        return;
+      }
+
+      // ── BALL INSIDE BIN ──
+      pageBall.style.display = 'none';
+      playThud();
+
+      setTimeout(() => {
+        pageBin.classList.remove('catch');   // lid closes
+        setTimeout(() => {
+          pageBin.style.transition = 'opacity 1.2s ease, transform 1.1s ease';
+          pageBin.style.opacity    = '0';
+          pageBin.style.transform  = 'scale(0.2) translateY(30px)';
+          setTimeout(() => {
+            pageBin.classList.remove('show');
+            pageBin.style.opacity = pageBin.style.transform = pageBin.style.transition = '';
+          }, 1250);
+        }, 1000);
+      }, 180);
+
+      phase = 'done';
+      canvas.classList.add('done');
+      hint.classList.add('hide');
+      resetBtn.classList.add('show');
+      stripEl.style.transition = 'box-shadow 1s ease';
+      stripEl.style.boxShadow  = `
+        0 2px 0 rgba(255,255,255,.5) inset, -1px 0 0 rgba(255,255,255,.2) inset,
+        0 -1px 0 rgba(80,40,0,.3) inset,    1px 0 0 rgba(80,40,0,.2) inset,
+        0 28px 56px rgba(139,94,16,.35),    0 8px 20px rgba(0,0,0,.10),
+        0 0 60px rgba(200,136,42,.4)
+      `;
+    }
+
+    pageBall.style.left    = (startBX - ballSize/2) + 'px';
+    pageBall.style.top     = (startBY - ballSize/2) + 'px';
+    pageBall.style.display = 'block';
+    pageBall.style.opacity = '1';
+    delete pageBall._fallSoundPlayed;
+    rafId = requestAnimationFrame(animateBall);
+  }
+
+
+
+  /* ── RESET ── */
+  window.resetPeel = function() {
+    cancelAnimationFrame(rafId);
+    phase = 'idle';
+    progress = 0;
+    locked = false;
+    dragging = false;
+    ball.alpha = 1;
+    canvas.classList.remove('done', 'grabbing');
+    canvas.style.pointerEvents = 'auto';
+    hint.classList.remove('hide');
+    resetBtn.classList.remove('show');
+
+    // Reset page-level ball and bin
+    const pageBall = document.getElementById('page-ball');
+    const pageBin  = document.getElementById('page-bin');
+    if (pageBall) { pageBall.style.display = 'none'; pageBall.style.opacity = '1'; delete pageBall._fallSoundPlayed; }
+    if (pageBin)  {
+      pageBin.classList.remove('show', 'catch');
+      pageBin.style.opacity   = '';
+      pageBin.style.transform = '';
+      pageBin.style.transition= '';
+    }
+
+    const stripEl = canvas.parentElement;
+    stripEl.style.boxShadow = '';
+
+    idleLoop();
+  };
+
+  /* ── POINTER EVENTS ── */
+  function getY(e) {
+    return e.touches ? e.touches[0].clientY : e.clientY;
+  }
+  function getX(e) {
+    return e.touches ? e.touches[0].clientX : e.clientX;
+  }
+
+  function onDown(e) {
+    if (locked || phase === 'done') return;
+    dragging = true;
+    startY   = getY(e);
+    startX   = getX(e);
+    startP   = progress;
+    cancelAnimationFrame(rafId);
+    canvas.classList.add('grabbing');
+    e.preventDefault();
+  }
+
+  let startX = 0;
+  function onMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    // ONLY vertical drag — dragging UP peels the liner upward
+    // Full screen height drag (window.innerHeight) maps to 0→1
+    // This means user needs to drag ~600-900px to fully peel
+    const dy    = getY(e) - startY;
+    const delta = -dy / window.innerHeight;
+    progress    = Math.min(1, Math.max(0, startP + delta));
+    draw();
+    // Fire only when user physically reaches 100%
+    if (progress >= 1 && !locked) {
+      locked   = true;
+      dragging = false;
+      canvas.classList.remove('grabbing');
+      hint.classList.add('hide');
+      setTimeout(startCrumple, 120);
+    }
+  }
+
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    canvas.classList.remove('grabbing');
+    // Snap back only if they barely started; hold position otherwise
+    if (progress < 0.12) snapBack();
+  }
+
+  function snapBack() {
+    const startT  = performance.now();
+    const startP2 = progress;
+    function step(now) {
+      const t    = Math.min(1, (now - startT) / 350);
+      const ease = 1 - Math.pow(1 - t, 3);
+      progress   = startP2 * (1 - ease);
+      draw();
+      if (t < 1) { rafId = requestAnimationFrame(step); }
+      else        { phase = 'idle'; progress = 0; idleLoop(); }
+    }
+    rafId = requestAnimationFrame(step);
+  }
+
+  canvas.addEventListener('mousedown',  onDown, { passive:false });
+  canvas.addEventListener('mousemove',  onMove, { passive:false });
+  canvas.addEventListener('mouseup',    onUp);
+  canvas.addEventListener('mouseleave', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive:false });
+  canvas.addEventListener('touchmove',  onMove, { passive:false });
+  canvas.addEventListener('touchend',   onUp);
+})();
+</script>
+
+</body>
+</html>
