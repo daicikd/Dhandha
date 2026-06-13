@@ -48,7 +48,7 @@ Every idea here follows the same 6-step flow:
 
 | # | Idea | Status | Signups | Live |
 |---|------|--------|---------|------|
-| — | More coming soon... | 🔄 Building | — | — |
+| — | ScentStrip | 🔄 Building | 1 | YES |
 
 **Status key:**
 🟢 Pursuing &nbsp;|&nbsp; 🟡 Parked &nbsp;|&nbsp; 🔴 Killed &nbsp;|&nbsp; 🔄 Building
