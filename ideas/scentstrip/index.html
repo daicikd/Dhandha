@@ -1516,7 +1516,7 @@ footer {
       <label class="form-label">Your thoughts</label>
       <textarea class="form-textarea" placeholder="What excites you? What worries you? What would make you buy it? Any format is fine — one line or a paragraph."></textarea>
       <label class="form-label">Email — if you want to hear when this launches</label>
-      <input class="form-input" type="email" placeholder="your@email.com">
+      <input class="form-input" type="email" placeholder="daivikdomadiya07@gmail.com">
       <button class="submit-btn" onclick="submitFeedback()">Send My Feedback</button>
     </div>
     <div class="submit-success" id="submit-success">
@@ -1592,9 +1592,90 @@ function selectScale(n) {
   selectedScale = n;
   document.querySelectorAll('.scale-dot').forEach((d,i) => d.classList.toggle('sel', i < n));
 }
-function submitFeedback() {
-  document.getElementById('feedback-form').style.display = 'none';
-  document.getElementById('submit-success').style.display = 'block';
+const API_URL = 'https://dhandha-api-production.up.railway.app/feedback'
+
+let selectedReaction = null
+let selectedScore    = null
+
+function selectReaction(btn) {
+  document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('sel'))
+  btn.classList.add('sel')
+  const map = {
+    'I need this':   '🔥 I need this',
+    'Interesting':   '🤔 Interesting',
+    'Has potential': '💡 Has potential',
+    'Not for me':    '😐 Not for me',
+    'Tell me more':  '❓ Tell me more'
+  }
+  const label = btn.querySelector('.reaction-label').textContent.trim()
+  selectedReaction = map[label] || label
+}
+
+function selectScale(n) {
+  selectedScore = n
+  document.querySelectorAll('.scale-dot').forEach((d, i) => {
+    d.classList.toggle('sel', i < n)
+  })
+}
+
+async function submitFeedback() {
+  if (!selectedReaction) { showFormError('Please pick a reaction first.'); return }
+  if (!selectedScore)    { showFormError('Please rate your interest level.'); return }
+
+  const message = document.getElementById('feedback-text')?.value?.trim() || ''
+  const email   = document.getElementById('feedback-email')?.value?.trim() || ''
+
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showFormError('Please enter a valid email address.')
+    return
+  }
+
+  const btn = document.querySelector('.submit-btn')
+  btn.textContent = 'Sending...'
+  btn.disabled = true
+
+  try {
+    const res  = await fetch(API_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idea:     'scentstrip',
+        reaction: selectedReaction,
+        score:    selectedScore,
+        message,
+        email
+      })
+    })
+    const data = await res.json()
+
+    if (res.ok && data.ok) {
+      document.getElementById('feedback-form').style.display  = 'none'
+      document.getElementById('submit-success').style.display = 'block'
+    } else if (res.status === 422) {
+      showFormError(data.errors?.map(e => e.message).join(' · ') || 'Validation error.')
+      btn.textContent = 'Send My Feedback'; btn.disabled = false
+    } else if (res.status === 429) {
+      showFormError('Too many submissions — please try again in 10 minutes.')
+      btn.textContent = 'Send My Feedback'; btn.disabled = false
+    } else {
+      showFormError('Something went wrong. Please try again.')
+      btn.textContent = 'Send My Feedback'; btn.disabled = false
+    }
+  } catch (err) {
+    showFormError('Could not reach the server. Check your connection.')
+    btn.textContent = 'Send My Feedback'; btn.disabled = false
+  }
+}
+
+function showFormError(message) {
+  let el = document.getElementById('form-error')
+  if (!el) {
+    el = document.createElement('p')
+    el.id = 'form-error'
+    el.style.cssText = 'color:#B83320;font-size:.82rem;margin-top:.5rem;font-family:"DM Sans",sans-serif;'
+    document.querySelector('.submit-btn').insertAdjacentElement('afterend', el)
+  }
+  el.textContent = message
 }
 
 /* ════════════════════════════════════════════════════════════════════════

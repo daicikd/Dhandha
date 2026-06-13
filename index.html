@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dhandha — Building Businesses That Matter</title>
+<title>Dhandha, Building Businesses That Matter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=Inter:wght@300;400;500;600&family=Noto+Sans+Gujarati:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
@@ -109,7 +109,7 @@
   .ideas-live-badge { display: flex; align-items: center; gap: .5rem; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--stone); font-weight: 500; }
   .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.75); } }
-  .ideas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .ideas-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
 
   /* Standard idea card */
   .idea-card {
@@ -368,7 +368,6 @@
   /* RESPONSIVE */
   @media (max-width: 900px) {
     .about-inner { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 1.5rem; }
-    .ideas-grid  { grid-template-columns: 1fr 1fr; }
     .ideas-inner { padding: 5rem 1.5rem; }
     .idea-card-featured { grid-template-columns: 1fr; min-height: auto; }
     .feat-visual { min-height: 220px; }
@@ -379,7 +378,6 @@
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
   @media (max-width: 600px) {
-    .ideas-grid { grid-template-columns: 1fr; }
     nav { padding: .9rem 1.25rem; }
     .nav-links { gap: 1.5rem; }
     .stats-row { gap: 1.5rem; }
@@ -438,7 +436,7 @@
       <h2 class="section-title">Not chasing success.<br>Building <span class="accent-red">legacy.</span></h2>
       <div class="about-body">
         <p>I grew up watching problems go unsolved, not because people didn't care, but because no one built the right solution. That bothered me. Still does.</p>
-        <p>Dhandha is my answer. It's a living, breathing collection of every idea that kept me up at night — researched, validated, and built with real people in mind.</p>
+        <p>Dhandha is my answer. It's a living, breathing collection of every idea that kept me up at night, researched, validated, and built with real people in mind.</p>
         <p><strong>I'm not here for quick wins.</strong> I'm here to build businesses that are still running, growing, and helping people 20 years from now.</p>
       </div>
       <div class="stats-row">
@@ -466,7 +464,7 @@
 
     <div class="ideas-grid">
 
-      <!-- ── SCENTSTRIP — featured full-width card ── -->
+      <!-- ── SCENTSTRIP, featured full-width card ── -->
       <a class="idea-card-featured" href="./ideas/scentstrip/index.html">
 
         <div class="feat-visual">
@@ -495,7 +493,7 @@
         <div class="feat-content">
           <div class="feat-badge">Fragrance · Consumer Product</div>
           <div class="feat-title">ScentStrip</div>
-          <div class="feat-tagline">A precision-engineered fragrance strip that adheres to your clothing — lasting all day, costing a fraction of a bottle.</div>
+          <div class="feat-tagline">A precision-engineered fragrance strip that adheres to your clothing, lasting all day, costing a fraction of a bottle.</div>
           <div class="feat-specs">
             <span class="feat-spec">Glycerin soap base</span>
             <span class="feat-spec">EDP concentration</span>
@@ -513,9 +511,6 @@
         </div>
 
       </a>
-
-      <!-- remaining idea cards -->
-      <div id="ideas-grid"></div>
 
     </div>
   </div>
@@ -543,7 +538,7 @@
       </div>
       <div class="contact-note">
         <div class="contact-note-title">Open to everything.</div>
-        <div class="contact-note-body">Whether you want to collaborate on an idea, invest in one, give honest feedback, or just say hello — I read every message personally.<br><br>If something here excites you, that's enough of a reason to reach out.</div>
+        <div class="contact-note-body">Whether you want to collaborate on an idea, invest in one, give honest feedback, or just say hello, I read every message personally.<br><br>If something here excites you, that's enough of a reason to reach out.</div>
       </div>
     </div>
     <button class="floating-cta" id="floating-cta">Send a message</button>
@@ -562,30 +557,6 @@
 </footer>
 
 <script>
-/* Remaining ideas (ScentStrip is rendered in HTML above) */
-const IDEAS = [
-  { id:'kiranapro',   name:'KiranaPro',   tag:'Fintech',      tagStyle:{bg:'#EDF5EE',color:'#2F6130',border:'#C8DFBA'}, iconBg:'#EDF5EE', icon:'🏪', tagline:'Business OS for India\'s 12 million kirana stores.',           status:'Validating', statusColor:'#5C9E5A', cardClass:'',               href:'./ideas/kiranapro/index.html' },
-  { id:'mentorloop',  name:'MentorLoop',  tag:'EdTech',       tagStyle:{bg:'#FBF0EE',color:'#B83320',border:'#F4A99A'}, iconBg:'#FBF0EE', icon:'🎯', tagline:'1-on-1 mentorship from people who\'ve actually done it.',     status:'Ideating',   statusColor:'#E05C45', cardClass:'',               href:'./ideas/mentorloop/index.html' },
-  { id:'agrichain',   name:'AgriChain',   tag:'AgriTech',     tagStyle:{bg:'#EDF5EE',color:'#2F6130',border:'#C8DFBA'}, iconBg:'#EDF5EE', icon:'🌾', tagline:'Transparent farm-to-table supply chains.',                    status:'Exploring',  statusColor:'#5C9E5A', cardClass:'accent-cream-bg',href:'./ideas/agrichain/index.html' },
-  { id:'skillsprint', name:'SkillSprint', tag:'EdTech',       tagStyle:{bg:'#EEF4FB',color:'#1D6FA4',border:'#A8CFF0'}, iconBg:'#EEF4FB', icon:'⚡', tagline:'Job-ready skills in 21 days — guaranteed.',                   status:'Ideating',   statusColor:'#4A9FD4', cardClass:'accent-red-bg',  href:'./ideas/skillsprint/index.html' },
-  { id:'healthstack', name:'HealthStack', tag:'HealthTech',   tagStyle:{bg:'#FBF0EE',color:'#B83320',border:'#F4A99A'}, iconBg:'#FBF0EE', icon:'🫀', tagline:'Your complete health record, owned by you.',                  status:'Researching',statusColor:'#E05C45', cardClass:'',               href:'./ideas/healthstack/index.html' },
-];
-
-document.getElementById('ideas-grid').innerHTML = IDEAS.map(idea => `
-  <a class="idea-card ${idea.cardClass}" href="${idea.href}">
-    <div class="idea-top">
-      <div class="idea-icon" style="background:${idea.iconBg}">${idea.icon}</div>
-      <span class="idea-tag" style="background:${idea.tagStyle.bg};color:${idea.tagStyle.color};border-color:${idea.tagStyle.border}">${idea.tag}</span>
-    </div>
-    <div class="idea-name">${idea.name}</div>
-    <div class="idea-tagline">${idea.tagline}</div>
-    <div class="idea-status">
-      <div class="status-dot" style="background:${idea.statusColor}"></div>
-      <span style="color:${idea.statusColor}">${idea.status}</span>
-    </div>
-  </a>
-`).join('');
-
 /* HERO CANVAS */
 const canvas = document.getElementById('hero-canvas');
 const ctx    = canvas.getContext('2d');
