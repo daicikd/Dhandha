@@ -6,7 +6,7 @@
 
 ## What is this?
 
-**[Dhandha](https://daicikd.github.io/Dhandha/)** (ધંધા) is the Gujarati word for *business* — and that's exactly what this repo is about.
+**[Dhandha](https://daicikd.github.io/Dhandha/){:target="_blank"}** (ધંધા) is the Gujarati word for *business* — and that's exactly what this repo is about.
 
 This is my public lab where every business idea I believe in gets:
 - A clear problem statement
@@ -48,7 +48,7 @@ Every idea here follows the same 6-step flow:
 
 | # | Idea | Status | Signups | Live |
 |:-:|:----:|:------:|:-------:|:----:|
-| 1 | [ScentStrip](https://daicikd.github.io/Dhandha/ideas/scentstrip/index.html) | 🟡 | 1 | YES |
+| 1 | [ScentStrip](https://daicikd.github.io/Dhandha/ideas/scentstrip/index.html){:target="_blank"} | 🟡 | 1 | YES |
 
 **Status key:**
 🟢 Pursuing &nbsp;|&nbsp; 🟡 Parked &nbsp;|&nbsp; 🔴 Killed &nbsp;|&nbsp; 🔄 Building
