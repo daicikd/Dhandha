@@ -48,7 +48,7 @@ Every idea here follows the same 6-step flow:
 
 | # | Idea | Status | Signups | Live |
 |---|------|--------|---------|------|
-| 1 | [ScentStrip](https://daicikd.github.io/Dhandha/ideas/scentstrip/index.html) | 🔄 Building | 1 | YES |
+| 1 | [ScentStrip](https://daicikd.github.io/Dhandha/ideas/scentstrip/index.html) | 🟡 | 1 | YES |
 
 **Status key:**
 🟢 Pursuing &nbsp;|&nbsp; 🟡 Parked &nbsp;|&nbsp; 🔴 Killed &nbsp;|&nbsp; 🔄 Building
