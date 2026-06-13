@@ -658,6 +658,188 @@ nav.scrolled {
 }
 .layer-card-desc { font-size:.83rem;color:var(--charcoal);line-height:1.65; }
 
+
+/* ── PRICE COMPARISON SECTION ───────────────────────────────────────── */
+#pricing {
+  background: var(--ink);
+  padding: 8rem 3rem;
+  position: relative;
+  overflow: hidden;
+}
+#pricing::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,136,42,.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.pricing-inner { max-width: 1160px; margin: 0 auto; }
+.pricing-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1.25rem;
+}
+.pricing-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: clamp(2rem,4vw,3.4rem);
+  line-height: 1.02; letter-spacing: -.025em;
+  color: var(--ivory); margin-bottom: .75rem;
+}
+.pricing-title em { font-style: italic; color: var(--amber); }
+.pricing-sub {
+  font-size: .95rem; color: rgba(250,246,240,.5);
+  font-weight: 300; line-height: 1.7; margin-bottom: 3rem;
+  max-width: 580px;
+}
+
+/* Currency selector */
+.currency-bar {
+  display: flex; align-items: center; gap: .75rem;
+  flex-wrap: wrap; margin-bottom: 3rem;
+}
+.currency-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(250,246,240,.35); white-space: nowrap; margin-right: .25rem;
+}
+.currency-btn {
+  display: flex; flex-direction: column; align-items: center; gap: .2rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: .55rem .9rem;
+  cursor: pointer;
+  transition: all .2s;
+  min-width: 64px;
+}
+.currency-btn:hover {
+  background: rgba(200,136,42,.1);
+  border-color: rgba(200,136,42,.3);
+}
+.currency-btn.active {
+  background: rgba(200,136,42,.15);
+  border-color: var(--amber);
+}
+.currency-btn .c-flag {
+  font-size: 1.1rem; line-height: 1;
+}
+.currency-btn .c-code {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(250,246,240,.5);
+}
+.currency-btn.active .c-code { color: var(--amber); }
+
+/* Comparison grid */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+.compare-card {
+  border-radius: 18px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s, box-shadow .25s;
+}
+.compare-card:hover { transform: translateY(-4px); }
+
+/* Budget card */
+.compare-card.budget {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+}
+/* Luxury card */
+.compare-card.luxury {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+}
+/* ScentStrip card — amber highlight */
+.compare-card.scentstrip {
+  background: linear-gradient(160deg, rgba(200,136,42,.14) 0%, rgba(200,136,42,.06) 100%);
+  border: 1.5px solid rgba(200,136,42,.4);
+  box-shadow: 0 0 40px rgba(200,136,42,.08);
+}
+.compare-card.scentstrip:hover {
+  box-shadow: 0 12px 48px rgba(200,136,42,.18);
+}
+
+/* Best value badge */
+.best-badge {
+  position: absolute; top: 1.1rem; right: 1.1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .52rem; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--ink); background: var(--amber);
+  padding: .25rem .65rem; border-radius: 20px;
+  font-weight: 700;
+}
+
+.compare-card-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+.compare-card-type {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(250,246,240,.35); margin-bottom: .4rem;
+}
+.compare-card-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; font-size: 1.15rem;
+  color: var(--ivory); margin-bottom: 1.25rem; line-height: 1.2;
+}
+.compare-card.scentstrip .compare-card-name { color: var(--amber-lt); }
+
+/* Price display */
+.price-range {
+  margin-bottom: 1.5rem;
+}
+.price-from {
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(250,246,240,.3); display: block; margin-bottom: .2rem;
+}
+.price-numbers {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900; font-size: 1.6rem;
+  color: var(--ivory); line-height: 1; letter-spacing: -.02em;
+  transition: opacity .25s;
+}
+.compare-card.scentstrip .price-numbers { color: var(--amber); }
+.price-unit {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(250,246,240,.3); margin-top: .35rem; display: block;
+}
+
+/* Features list */
+.compare-features {
+  list-style: none;
+  display: flex; flex-direction: column; gap: .6rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.compare-features li {
+  display: flex; align-items: center; gap: .65rem;
+  font-size: .82rem; color: rgba(250,246,240,.5); line-height: 1.4;
+}
+.compare-features li .fi { font-size: .75rem; flex-shrink: 0; }
+.compare-features li.good { color: rgba(250,246,240,.75); }
+.compare-features li.bad  { color: rgba(250,246,240,.3); text-decoration: line-through; }
+
+/* Disclaimer */
+.pricing-disclaimer {
+  margin-top: 2rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .58rem; letter-spacing: .1em;
+  color: rgba(250,246,240,.2); text-align: center; line-height: 1.8;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .compare-grid { grid-template-columns: 1fr; }
+  #pricing { padding: 5rem 1.5rem; }
+  .currency-bar { gap: .5rem; }
+}
+
 /* ── PRODUCT SECTION ─────────────────────────────────────────────────── */
 #product {
   background:var(--ivory);padding:8rem 3rem;
@@ -1422,6 +1604,126 @@ footer {
   </div>
 </section>
 
+
+<!-- ── PRICE COMPARISON ──────────────────────────────────────────────────── -->
+<section id="pricing">
+  <div class="pricing-inner">
+
+    <p class="pricing-eyebrow reveal">Real Numbers</p>
+    <h2 class="pricing-title reveal">
+      The cost of smelling<br><em>this good.</em>
+    </h2>
+    <p class="pricing-sub reveal">
+      See what you actually pay for a bottle of perfume versus a pack of ScentStrip — in your currency, with real market prices.
+    </p>
+
+    <!-- Currency selector -->
+    <div class="currency-bar reveal" id="currency-bar">
+      <span class="currency-label">Currency</span>
+      <button class="currency-btn active" data-cur="INR" onclick="setCurrency('INR',this)">
+        <span class="c-flag">🇮🇳</span>
+        <span class="c-code">INR</span>
+      </button>
+      <button class="currency-btn" data-cur="USD" onclick="setCurrency('USD',this)">
+        <span class="c-flag">🇺🇸</span>
+        <span class="c-code">USD</span>
+      </button>
+      <button class="currency-btn" data-cur="EUR" onclick="setCurrency('EUR',this)">
+        <span class="c-flag">🇪🇺</span>
+        <span class="c-code">EUR</span>
+      </button>
+      <button class="currency-btn" data-cur="GBP" onclick="setCurrency('GBP',this)">
+        <span class="c-flag">🇬🇧</span>
+        <span class="c-code">GBP</span>
+      </button>
+      <button class="currency-btn" data-cur="AED" onclick="setCurrency('AED',this)">
+        <span class="c-flag">🇦🇪</span>
+        <span class="c-code">AED</span>
+      </button>
+      <button class="currency-btn" data-cur="SGD" onclick="setCurrency('SGD',this)">
+        <span class="c-flag">🇸🇬</span>
+        <span class="c-code">SGD</span>
+      </button>
+      <button class="currency-btn" data-cur="CAD" onclick="setCurrency('CAD',this)">
+        <span class="c-flag">🇨🇦</span>
+        <span class="c-code">CAD</span>
+      </button>
+      <button class="currency-btn" data-cur="AUD" onclick="setCurrency('AUD',this)">
+        <span class="c-flag">🇦🇺</span>
+        <span class="c-code">AUD</span>
+      </button>
+    </div>
+
+    <!-- Comparison cards -->
+    <div class="compare-grid reveal">
+
+      <!-- Budget perfume -->
+      <div class="compare-card budget">
+        <div class="compare-card-icon">🧴</div>
+        <div class="compare-card-type">Everyday Perfume</div>
+        <div class="compare-card-name">Budget Bottle<br><small style="font-size:.75rem;font-weight:400;opacity:.6">Fogg, Engage, Nike, Davidoff Cool Water</small></div>
+        <div class="price-range">
+          <span class="price-from">Bottle costs</span>
+          <div class="price-numbers" id="budget-price">₹400 – ₹1,800</div>
+          <span class="price-unit">per 100ml bottle · 1–2 months use</span>
+        </div>
+        <ul class="compare-features">
+          <li class="good"><span class="fi">✓</span> Affordable upfront cost</li>
+          <li class="bad"><span class="fi">✗</span> Fades in 2–4 hours</li>
+          <li class="bad"><span class="fi">✗</span> EDT or EDC concentration</li>
+          <li class="bad"><span class="fi">✗</span> Heavy glass bottle</li>
+          <li class="bad"><span class="fi">✗</span> Can't carry easily</li>
+        </ul>
+      </div>
+
+      <!-- Luxury perfume -->
+      <div class="compare-card luxury">
+        <div class="compare-card-icon">🏺</div>
+        <div class="compare-card-type">Designer / Luxury Perfume</div>
+        <div class="compare-card-name">Luxury Bottle<br><small style="font-size:.75rem;font-weight:400;opacity:.6">Chanel, Dior, Tom Ford, Armani, YSL</small></div>
+        <div class="price-range">
+          <span class="price-from">Bottle costs</span>
+          <div class="price-numbers" id="luxury-price">₹6,000 – ₹20,000</div>
+          <span class="price-unit">per 100ml bottle · 2–4 months use</span>
+        </div>
+        <ul class="compare-features">
+          <li class="good"><span class="fi">✓</span> EDP concentration, lasts longer</li>
+          <li class="good"><span class="fi">✓</span> Complex, refined scent profile</li>
+          <li class="bad"><span class="fi">✗</span> Extremely expensive</li>
+          <li class="bad"><span class="fi">✗</span> Fragile glass, breaks easily</li>
+          <li class="bad"><span class="fi">✗</span> Gone by afternoon</li>
+        </ul>
+      </div>
+
+      <!-- ScentStrip -->
+      <div class="compare-card scentstrip">
+        <div class="best-badge">Best Value</div>
+        <div class="compare-card-icon">✦</div>
+        <div class="compare-card-type">Wearable Fragrance</div>
+        <div class="compare-card-name">ScentStrip<br><small style="font-size:.75rem;font-weight:400;opacity:.7">Glycerin EDP strip · Fabric-safe · 8h wear</small></div>
+        <div class="price-range">
+          <span class="price-from">7-strip pack costs</span>
+          <div class="price-numbers" id="strip-price">₹199 – ₹349</div>
+          <span class="price-unit">7 strips · 1 week supply · EDP concentration</span>
+        </div>
+        <ul class="compare-features">
+          <li class="good"><span class="fi">✓</span> EDP concentration (15–25%)</li>
+          <li class="good"><span class="fi">✓</span> 6–8 hours of active scent</li>
+          <li class="good"><span class="fi">✓</span> Fits in any pocket or wallet</li>
+          <li class="good"><span class="fi">✓</span> Zero glass — zero breakage</li>
+          <li class="good"><span class="fi">✓</span> Fraction of a bottle's cost</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <p class="pricing-disclaimer">
+      Price ranges sourced from Amazon India, Nykaa, Sephora, and brand websites (June 2026). ScentStrip pricing is estimated based on prototype cost modelling — final retail pricing subject to change. All conversions use approximate current exchange rates.
+    </p>
+
+  </div>
+</section>
+
 <!-- ── HOW IT WORKS ───────────────────────────────────────────────────────── -->
 <section id="how">
   <div class="how-inner">
@@ -1516,7 +1818,7 @@ footer {
       <label class="form-label">Your thoughts</label>
       <textarea class="form-textarea" placeholder="What excites you? What worries you? What would make you buy it? Any format is fine — one line or a paragraph."></textarea>
       <label class="form-label">Email — if you want to hear when this launches</label>
-      <input class="form-input" type="email" placeholder="daivikdomadiya07@gmail.com">
+      <input class="form-input" type="email" placeholder="your@email.com">
       <button class="submit-btn" onclick="submitFeedback()">Send My Feedback</button>
     </div>
     <div class="submit-success" id="submit-success">
@@ -1534,6 +1836,132 @@ footer {
 
 <!-- ── SCRIPTS ─────────────────────────────────────────────────────────────── -->
 <script>
+
+/* ── PRICE COMPARISON — currency switcher ─────────────────────────────── */
+const PRICES = {
+  INR: {
+    symbol: '₹',
+    budget:  '400 – 1,800',
+    luxury:  '6,000 – 20,000',
+    strip:   '199 – 349',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · 2–4 months use',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Amazon India, Nykaa, brand websites (2026)'
+  },
+  USD: {
+    symbol: '$',
+    budget:  '5 – 30',
+    luxury:  '80 – 400',
+    strip:   '2.50 – 4.50',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Chanel $135, Tom Ford $186+',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Sephora US, brand websites, eBay market data (2026)'
+  },
+  EUR: {
+    symbol: '€',
+    budget:  '5 – 25',
+    luxury:  '75 – 350',
+    strip:   '2.30 – 4.20',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml · Miss Dior €135, Chanel No.5 €172',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Sephora Europe, brand websites (2026)'
+  },
+  GBP: {
+    symbol: '£',
+    budget:  '4 – 22',
+    luxury:  '65 – 300',
+    strip:   '2.00 – 3.80',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Chanel, Dior, YSL range',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: John Lewis, Boots, brand websites UK (2026)'
+  },
+  AED: {
+    symbol: 'AED ',
+    budget:  '18 – 110',
+    luxury:  '290 – 1,450',
+    strip:   '9 – 16',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Dubai duty-free & retail pricing',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Namshi, Sephora UAE, Dubai Duty Free (2026)'
+  },
+  SGD: {
+    symbol: 'S$',
+    budget:  '8 – 40',
+    luxury:  '110 – 550',
+    strip:   '3.40 – 6.00',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Singapore Sephora & Tangs',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Sephora SG, Tangs, brand websites (2026)'
+  },
+  CAD: {
+    symbol: 'C$',
+    budget:  '7 – 40',
+    luxury:  '110 – 530',
+    strip:   '3.40 – 6.00',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Shoppers Drug Mart, Sephora CA',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Sephora Canada, Shoppers Drug Mart (2026)'
+  },
+  AUD: {
+    symbol: 'A$',
+    budget:  '8 – 45',
+    luxury:  '120 – 580',
+    strip:   '3.80 – 6.80',
+    budgetUnit:  'per 100ml bottle · 1–2 months use',
+    luxuryUnit:  'per 100ml bottle · Myer, David Jones, Sephora AU',
+    stripUnit:   '7 strips · 1 week supply · EDP concentration',
+    note: 'Sources: Myer, David Jones, Sephora AU (2026)'
+  }
+};
+
+function setCurrency(code, btn) {
+  // Update active button
+  document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const p = PRICES[code];
+  if (!p) return;
+
+  // Animate price change
+  const els = [
+    { id: 'budget-price', val: p.symbol + p.budget },
+    { id: 'luxury-price', val: p.symbol + p.luxury },
+    { id: 'strip-price',  val: p.symbol + p.strip  }
+  ];
+
+  els.forEach(({ id, val }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(6px)';
+    el.style.transition = 'opacity .2s ease, transform .2s ease';
+    setTimeout(() => {
+      el.textContent = val;
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, 200);
+  });
+
+  // Update unit labels
+  const units = document.querySelectorAll('.price-unit');
+  if (units[0]) units[0].textContent = p.budgetUnit;
+  if (units[1]) units[1].textContent = p.luxuryUnit;
+  if (units[2]) units[2].textContent = p.stripUnit;
+
+  // Update disclaimer note
+  const disc = document.querySelector('.pricing-disclaimer');
+  if (disc) {
+    disc.textContent = p.note + ' · ScentStrip pricing is estimated based on prototype cost modelling — final retail pricing subject to change.';
+  }
+}
+
 /* ── NAV scroll ───────────────────────────────────────────────────────── */
 window.addEventListener('scroll', () => {
   document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
@@ -1592,90 +2020,9 @@ function selectScale(n) {
   selectedScale = n;
   document.querySelectorAll('.scale-dot').forEach((d,i) => d.classList.toggle('sel', i < n));
 }
-const API_URL = 'https://dhandha-api-production.up.railway.app/feedback'
-
-let selectedReaction = null
-let selectedScore    = null
-
-function selectReaction(btn) {
-  document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('sel'))
-  btn.classList.add('sel')
-  const map = {
-    'I need this':   '🔥 I need this',
-    'Interesting':   '🤔 Interesting',
-    'Has potential': '💡 Has potential',
-    'Not for me':    '😐 Not for me',
-    'Tell me more':  '❓ Tell me more'
-  }
-  const label = btn.querySelector('.reaction-label').textContent.trim()
-  selectedReaction = map[label] || label
-}
-
-function selectScale(n) {
-  selectedScore = n
-  document.querySelectorAll('.scale-dot').forEach((d, i) => {
-    d.classList.toggle('sel', i < n)
-  })
-}
-
-async function submitFeedback() {
-  if (!selectedReaction) { showFormError('Please pick a reaction first.'); return }
-  if (!selectedScore)    { showFormError('Please rate your interest level.'); return }
-
-  const message = document.getElementById('feedback-text')?.value?.trim() || ''
-  const email   = document.getElementById('feedback-email')?.value?.trim() || ''
-
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showFormError('Please enter a valid email address.')
-    return
-  }
-
-  const btn = document.querySelector('.submit-btn')
-  btn.textContent = 'Sending...'
-  btn.disabled = true
-
-  try {
-    const res  = await fetch(API_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        idea:     'scentstrip',
-        reaction: selectedReaction,
-        score:    selectedScore,
-        message,
-        email
-      })
-    })
-    const data = await res.json()
-
-    if (res.ok && data.ok) {
-      document.getElementById('feedback-form').style.display  = 'none'
-      document.getElementById('submit-success').style.display = 'block'
-    } else if (res.status === 422) {
-      showFormError(data.errors?.map(e => e.message).join(' · ') || 'Validation error.')
-      btn.textContent = 'Send My Feedback'; btn.disabled = false
-    } else if (res.status === 429) {
-      showFormError('Too many submissions — please try again in 10 minutes.')
-      btn.textContent = 'Send My Feedback'; btn.disabled = false
-    } else {
-      showFormError('Something went wrong. Please try again.')
-      btn.textContent = 'Send My Feedback'; btn.disabled = false
-    }
-  } catch (err) {
-    showFormError('Could not reach the server. Check your connection.')
-    btn.textContent = 'Send My Feedback'; btn.disabled = false
-  }
-}
-
-function showFormError(message) {
-  let el = document.getElementById('form-error')
-  if (!el) {
-    el = document.createElement('p')
-    el.id = 'form-error'
-    el.style.cssText = 'color:#B83320;font-size:.82rem;margin-top:.5rem;font-family:"DM Sans",sans-serif;'
-    document.querySelector('.submit-btn').insertAdjacentElement('afterend', el)
-  }
-  el.textContent = message
+function submitFeedback() {
+  document.getElementById('feedback-form').style.display = 'none';
+  document.getElementById('submit-success').style.display = 'block';
 }
 
 /* ════════════════════════════════════════════════════════════════════════
