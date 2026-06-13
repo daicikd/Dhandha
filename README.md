@@ -6,7 +6,7 @@
 
 ## What is this?
 
-**Dhandha** (ધંધા) is the Gujarati word for *business* — and that's exactly what this repo is about.
+**[Dhandha](https://daicikd.github.io/Dhandha/)** (ધંધા) is the Gujarati word for *business* — and that's exactly what this repo is about.
 
 This is my public lab where every business idea I believe in gets:
 - A clear problem statement
