@@ -383,6 +383,21 @@
     .stats-row { gap: 1.5rem; }
     .feat-content { padding: 2rem 1.5rem; }
   }
+
+    /* RESEARCH PAPER LINK */
+  .paper-link {
+    display: flex; align-items: center; gap: 1.25rem;
+    padding: 1.1rem 1.5rem; border: 1px solid var(--border); border-radius: 14px;
+    background: var(--cream); text-decoration: none; color: inherit;
+    transition: border-color .25s, transform .25s;
+  }
+  .paper-link:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .paper-link-label { font-size: .62rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); white-space: nowrap; }
+  .paper-link-title { flex: 1; font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; color: var(--ink); }
+  .paper-link-cta { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--stone); white-space: nowrap; transition: color .2s; }
+  .paper-link:hover .paper-link-cta { color: var(--amber); }
+  @media (max-width: 600px) { .paper-link { flex-direction: column; align-items: flex-start; gap: .4rem; } }
+
 </style>
 </head>
 <body>
@@ -512,6 +527,13 @@
 
       </a>
 
+      <!-- ── SCENTSTRIP RESEARCH PAPER ── -->
+      <a class="paper-link" href="./ideas/scentstrip/ScentStrip_Research_Paper.pdf" target="_blank" rel="noopener">
+        <span class="paper-link-label">Research paper</span>
+        <span class="paper-link-title">ScentStrip: the science, the market and the business model</span>
+        <span class="paper-link-cta">Read PDF ↗</span>
+      </a>
+      
     </div>
   </div>
 </section>
