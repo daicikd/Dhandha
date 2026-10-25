@@ -55,6 +55,12 @@ Every idea here follows the same 6-step flow:
 
 ---
 
+## Under the Hood
+
+The landing pages are static HTML on GitHub Pages. Every feedback form sends real data to **[dhandha-api](https://github.com/daicikd/dhandha-api)**, a Node.js and Express backend on Render that validates, sanitizes and stores each response in MongoDB Atlas.
+
+---
+
 ## Let's Work Together
 
 I'm open to:
@@ -69,7 +75,7 @@ I'm open to:
 
 ## About Me
 
-Third-year CS student at San Francisco State University. My family runs a construction company in Gujarat, I grew up around infrastructure, contracts, and the grind of building real things. Now I build digital ones too.
+Fourth-year CS student at San Francisco State University. My family runs a construction company in Gujarat, I grew up around infrastructure, contracts, and the grind of building real things. Now I build digital ones too.
 
 I believe the best portfolio isn't a list of projects. It's a record of ideas you actually shipped.
 
