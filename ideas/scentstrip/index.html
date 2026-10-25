@@ -1814,12 +1814,13 @@ footer {
     <!-- Message form -->
     <div class="feedback-form reveal" id="feedback-form">
       <label class="form-label">Your name (optional)</label>
-      <input class="form-input" type="text" placeholder="e.g. Daivik Domadiya">
+      <input class="form-input" type="text" id="feedback-name" maxlength="100" placeholder="e.g. Daivik Domadiya">
       <label class="form-label">Your thoughts</label>
-      <textarea class="form-textarea" placeholder="What excites you? What worries you? What would make you buy it? Any format is fine, one line or a paragraph."></textarea>
+      <textarea class="form-textarea" id="feedback-message" maxlength="2000" placeholder="What excites you? What worries you? What would make you buy it? Any format is fine, one line or a paragraph."></textarea>
       <label class="form-label">Email — if you want to hear when this launches</label>
-      <input class="form-input" type="email" placeholder="your@email.com">
-      <button class="submit-btn" onclick="submitFeedback()">Send My Feedback</button>
+      <input class="form-input" type="email" id="feedback-email" maxlength="254" placeholder="your@email.com">
+      <div id="feedback-error" role="alert" style="display:none;color:var(--amber-dk);font-size:.85rem;margin-bottom:1rem;"></div>
+      <button class="submit-btn" id="feedback-submit" onclick="submitFeedback()">Send My Feedback</button>
     </div>
     <div class="submit-success" id="submit-success">
       Thank you, your feedback lands directly with the founder. ✦
@@ -2011,18 +2012,69 @@ function showNote(type) {
   }, 160);
 }
 
+/* Feedback API (dhandha-api on Render) */
+const FEEDBACK_API_URL = 'https://dhandha-api-y7dr.onrender.com/feedback';
+
+let selectedReaction = null;
 function selectReaction(btn) {
   document.querySelectorAll('.reaction-btn').forEach(b => b.classList.remove('sel'));
   btn.classList.add('sel');
+  // Must match ALLOWED_REACTIONS on the server, e.g. "🔥 I need this"
+  const emoji = btn.querySelector('.reaction-emoji').textContent.trim();
+  const label = btn.querySelector('.reaction-label').textContent.trim();
+  selectedReaction = emoji + ' ' + label;
 }
 let selectedScale = null;
 function selectScale(n) {
   selectedScale = n;
   document.querySelectorAll('.scale-dot').forEach((d,i) => d.classList.toggle('sel', i < n));
 }
-function submitFeedback() {
-  document.getElementById('feedback-form').style.display = 'none';
-  document.getElementById('submit-success').style.display = 'block';
+function showFeedbackError(msg) {
+  const el = document.getElementById('feedback-error');
+  el.textContent = msg;
+  el.style.display = msg ? 'block' : 'none';
+}
+async function submitFeedback() {
+  showFeedbackError('');
+  if (!selectedReaction) return showFeedbackError('Pick a reaction above first.');
+  if (!selectedScale)    return showFeedbackError('Choose a number from 1 to 10 above.');
+
+  const btn = document.getElementById('feedback-submit');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const res = await fetch(FEEDBACK_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idea:     'scentstrip',
+        reaction: selectedReaction,
+        score:    selectedScale,
+        name:     document.getElementById('feedback-name').value.trim(),
+        message:  document.getElementById('feedback-message').value.trim(),
+        email:    document.getElementById('feedback-email').value.trim()
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok || !data.ok) {
+      const msg = (data.errors && data.errors[0] && data.errors[0].message)
+        || data.message
+        || 'Something went wrong. Please try again.';
+      throw new Error(msg);
+    }
+
+    document.getElementById('feedback-form').style.display = 'none';
+    document.getElementById('submit-success').style.display = 'block';
+  } catch (err) {
+    showFeedbackError(err.message === 'Failed to fetch'
+      ? 'Could not reach the server. It may be waking up, try again in a moment.'
+      : err.message);
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
